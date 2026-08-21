@@ -1,0 +1,32 @@
+[project]
+name = "eu-reg-search"
+version = "0.1.0"
+description = "Cross-lingual retrieval over EU financial regulation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Naveen" }]
+dependencies = ["pydantic>=2.7", "numpy>=1.24", "beautifulsoup4>=4.12", "requests>=2.31"]
+
+[project.optional-dependencies]
+pdf = ["pypdf>=4.2"]
+search = ["rank-bm25>=0.2.2"]
+train = ["torch>=2.2", "sentence-transformers>=3.0"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
