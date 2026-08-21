@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.idea/
+.vscode/
+.DS_Store
+.local/
+*.local.md
+data/raw/
+data/processed/
+runs/
+index/
+reports/figures/*.png
+!reports/figures/.gitkeep
