@@ -1,0 +1,22 @@
+{
+  "system": "dense-zeroshot",
+  "queries": 564,
+  "ndcg": 0.154,
+  "recall": 0.2382,
+  "mrr": 0.1389,
+  "provenance_complete": true,
+  "slices": {
+    "same_language": {
+      "queries": 141,
+      "ndcg": 0.2364,
+      "recall": 0.3617,
+      "mrr": 0.2148
+    },
+    "cross_lingual": {
+      "queries": 423,
+      "ndcg": 0.1265,
+      "recall": 0.197,
+      "mrr": 0.1136
+    }
+  }
+}
