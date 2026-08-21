@@ -48,3 +48,25 @@ def test_build_corpus_writes_one_record_per_article(tmp_path):
     assert count == len(INSTRUMENTS) * len(LANGUAGES)
     first = json.loads(out.read_text().splitlines()[0])
     assert first["celex"] and first["article"] and first["language"]
+
+
+def test_language_codes_map_to_iso_639_3():
+    from euregsearch.corpus.instruments import ISO_639_3
+
+    assert ISO_639_3 == {"en": "eng", "nl": "nld", "de": "deu", "fr": "fra"}
+    assert set(ISO_639_3) == set(LANGUAGES)
+
+
+def test_empty_body_is_rejected_rather_than_cached(tmp_path, monkeypatch):
+    class EmptyResponse:
+        status_code = 202
+        content = b""
+        text = ""
+
+        def raise_for_status(self):
+            return None
+
+    monkeypatch.setattr("euregsearch.corpus.instruments.requests.get", lambda *a, **k: EmptyResponse())
+    with pytest.raises(RuntimeError, match="empty body"):
+        fetch_html("32014L0065", "en", tmp_path)
+    assert not (tmp_path / "32014L0065.en.html").exists()

@@ -7,10 +7,15 @@ from pathlib import Path
 
 import requests
 
-from ..provenance import BASE_URL
 from .eurlex import segment_articles
 
 LANGUAGES = ("en", "nl", "de", "fr")
+
+# The EUR-Lex web UI sits behind an AWS WAF bot challenge and returns 202 with an empty
+# body to automated clients. Cellar is the Publications Office's sanctioned
+# machine-to-machine endpoint; it negotiates language via ISO 639-3 codes.
+CELLAR_URL = "http://publications.europa.eu/resource/celex/{celex}"
+ISO_639_3 = {"en": "eng", "nl": "nld", "de": "deu", "fr": "fra"}
 
 
 @dataclass(frozen=True)
@@ -34,8 +39,14 @@ def fetch_html(celex: str, language: str, cache_dir: Path, pause: float = 1.0) -
     cached = cache_dir / f"{celex}.{language}.html"
     if cached.exists():
         return cached.read_text(encoding="utf-8")
-    response = requests.get(BASE_URL.format(lang=language.upper(), celex=celex), timeout=60)
+    response = requests.get(
+        CELLAR_URL.format(celex=celex),
+        timeout=90,
+        headers={"Accept": "application/xhtml+xml", "Accept-Language": ISO_639_3[language]},
+    )
     response.raise_for_status()
+    if not response.content:
+        raise RuntimeError(f"empty body for {celex}/{language} (status {response.status_code})")
     cached.write_text(response.text, encoding="utf-8")
     time.sleep(pause)
     return response.text
