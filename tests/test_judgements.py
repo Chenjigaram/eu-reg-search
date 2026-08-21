@@ -50,3 +50,16 @@ def test_disjointness_fails_when_training_touches_an_evaluation_article():
 
 def test_no_judgement_is_empty():
     assert all(j.relevant for j in build_judgements(ENTRIES, ["en", "nl"]))
+
+
+def test_evaluation_articles_are_collected():
+    from euregsearch.qa.judgements import evaluation_articles
+
+    articles = evaluation_articles(build_judgements(ENTRIES, ["en"]))
+    assert ("32014L0065", "25") in articles
+
+
+def test_disjointness_now_guards_synthetic_questions_only():
+    judgements = build_judgements(ENTRIES, ["en"])
+    assert training_is_disjoint(judgements, [("32014R0600", "1")]) is True
+    assert training_is_disjoint(judgements, [("32014L0065", "25")]) is False

@@ -59,3 +59,30 @@ def test_abort_gate_passes_at_the_floor():
 
 def test_minimum_is_the_value_fixed_in_the_spec():
     assert MINIMUM_PAIRS == 120
+
+
+NUMBERED_PAGE = """
+9. How should the benchmark requirement be interpreted where price data is missing?
+When insufficient price data are available, an appropriate proxy should be used, in line with
+Article 8 of Regulation (EU) No 1286/2014.
+
+10. Does the KID apply to all share classes?
+Yes. See Article 4 of Regulation (EU) No 1286/2014.
+"""
+
+
+def test_numbered_format_is_parsed_when_there_are_no_answer_markers():
+    entries = extract_entries([NUMBERED_PAGE], language="en", source="JC")
+    assert len(entries) == 2
+
+
+def test_numbered_format_splits_question_from_answer():
+    entries = extract_entries([NUMBERED_PAGE], language="en", source="JC")
+    assert entries[0].question.endswith("?")
+    assert "proxy should be used" in entries[0].answer
+
+
+def test_numbered_format_resolves_citations():
+    entries = extract_entries([NUMBERED_PAGE], language="en", source="JC")
+    assert entries[0].citations == [("32014R1286", "8")]
+    assert entries[1].citations == [("32014R1286", "4")]

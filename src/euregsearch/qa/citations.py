@@ -11,7 +11,7 @@ INSTRUMENT_ALIASES = {
 }
 
 NAME_ALIASES = {
-    "mifid ii": "32014L0065",
+    "mifid": "32014L0065",
     "mifir": "32014R0600",
     "priips": "32014R1286",
 }
@@ -27,13 +27,15 @@ NUMBER = re.compile(r"\d{3,4}/\d{2,4}")
 
 
 def _resolve(instrument: str) -> str | None:
-    lowered = instrument.lower().strip()
-    for alias, celex in NAME_ALIASES.items():
-        if alias in lowered:
-            return celex
+    # Numbers are more specific than names: "MiFID II Delegated Regulation (EU) 2017/565"
+    # must resolve to the delegated regulation, not to MiFID II itself.
     for match in NUMBER.finditer(instrument):
         celex = INSTRUMENT_ALIASES.get(match.group(0))
         if celex:
+            return celex
+    lowered = instrument.lower().strip()
+    for alias, celex in NAME_ALIASES.items():
+        if alias in lowered:
             return celex
     return None
 

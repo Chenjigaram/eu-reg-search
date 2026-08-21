@@ -51,3 +51,12 @@ def test_synthetic_pairs_reference_the_article():
 def test_no_pairs_from_an_empty_corpus():
     assert build_cross_lingual_pairs([]) == []
     assert build_synthetic_pairs([]) == []
+
+
+def test_synthetic_pairs_skip_excluded_evaluation_articles():
+    pairs = build_synthetic_pairs(REFS, exclude={("32014L0065", "25")})
+    assert all(key != ("32014L0065", "25") for _a, _p, key in pairs)
+
+
+def test_synthetic_pairs_without_exclusions_are_unchanged():
+    assert len(build_synthetic_pairs(REFS)) == len(build_synthetic_pairs(REFS, exclude=set()))

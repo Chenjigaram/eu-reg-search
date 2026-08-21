@@ -46,6 +46,17 @@ def build_judgements(entries: list[QAEntry], target_languages: list[str]) -> lis
     return judgements
 
 
-def training_is_disjoint(judgements: list[Judgement], training_pairs: list[tuple[str, str]]) -> bool:
-    evaluation = {pair for judgement in judgements for pair in judgement.relevant}
-    return not evaluation & set(training_pairs)
+def evaluation_articles(judgements: list[Judgement]) -> set[tuple[str, str]]:
+    return {pair for judgement in judgements for pair in judgement.relevant}
+
+
+def training_is_disjoint(judgements: list[Judgement], synthetic_pair_keys: list[tuple[str, str]]) -> bool:
+    """No SYNTHETIC training question may describe an article used in evaluation.
+
+    Evaluation articles must be present in the index -- they are what retrieval returns --
+    so disjointness cannot mean excluding them from the corpus. The leak this guards
+    against is narrower: a generated question naming an article we later score on.
+    Cross-lingual pairs are exempt; they carry no question, only two language versions
+    of the same provision.
+    """
+    return not evaluation_articles(judgements) & set(synthetic_pair_keys)

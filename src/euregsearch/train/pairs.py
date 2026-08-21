@@ -28,9 +28,12 @@ def build_cross_lingual_pairs(refs: list[ArticleRef]) -> list[Pair]:
     return pairs
 
 
-def build_synthetic_pairs(refs: list[ArticleRef]) -> list[Pair]:
+def build_synthetic_pairs(refs: list[ArticleRef], exclude: set[tuple[str, str]] | None = None) -> list[Pair]:
+    blocked = exclude or set()
     pairs: list[Pair] = []
     for key, by_language in _grouped(refs).items():
+        if key in blocked:
+            continue
         for _language, ref in by_language.items():
             question = f"What does Article {ref.article} of {ref.celex} provide?"
             pairs.append((question, ref.text, key))
