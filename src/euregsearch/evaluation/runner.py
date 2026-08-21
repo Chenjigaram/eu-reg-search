@@ -9,6 +9,7 @@ from ..qa.judgements import Judgement
 from .metrics import mrr_at_k, ndcg_at_k, recall_at_k
 
 SearchFn = Callable[[str, int], list[tuple[ArticleRef, float]]]
+SearchFactory = Callable[[str], SearchFn]
 
 
 @dataclass
@@ -38,13 +39,19 @@ class SystemResult:
                 "provenance_complete": self.provenance_complete, "slices": self.by_slice()}
 
 
-def evaluate_system(name: str, search: SearchFn, judgements: list[Judgement], k: int = 10) -> SystemResult:
+def evaluate_system(name: str, search_factory: SearchFactory, judgements: list[Judgement],
+                    k: int = 10) -> SystemResult:
+    """Score a system. The factory yields a retriever restricted to one target language,
+    so a cross-lingual judgement is genuinely answered from that language's articles only."""
     per_slice: dict[str, list[tuple[float, float, float]]] = {}
     scores: list[tuple[float, float, float]] = []
     complete = True
+    cache: dict[str, SearchFn] = {}
 
     for judgement in judgements:
-        hits = search(judgement.query, k)
+        if judgement.target_language not in cache:
+            cache[judgement.target_language] = search_factory(judgement.target_language)
+        hits = cache[judgement.target_language](judgement.query, k)
         complete = complete and all(ref.is_complete() for ref, _ in hits)
         retrieved = [ref.key() for ref, _ in hits]
         row = (

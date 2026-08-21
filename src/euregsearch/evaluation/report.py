@@ -12,6 +12,25 @@ def dense_search_fn(embedder: Embedder, store: VectorStore):
     return search
 
 
+def dense_factory(embedder: Embedder, refs: list[ArticleRef]):
+    """Encode once per language and return a factory of language-restricted retrievers."""
+    by_language: dict[str, list[ArticleRef]] = {}
+    for ref in refs:
+        by_language.setdefault(ref.language, []).append(ref)
+    built: dict[str, object] = {}
+
+    def factory(language: str):
+        if language not in built:
+            subset = by_language.get(language, [])
+            store = VectorStore()
+            if subset:
+                store.add(subset, embedder.encode([r.text for r in subset], is_query=False))
+            built[language] = dense_search_fn(embedder, store)
+        return built[language]
+
+    return factory
+
+
 def comparison_table(summaries: list[dict]) -> str:
     if not summaries:
         return "No results to report."

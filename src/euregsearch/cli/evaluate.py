@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from ..evaluation.baselines import BM25Retriever
+from ..evaluation.baselines import bm25_factory
 from ..evaluation.runner import evaluate_system
 from ..provenance import ArticleRef
 from ..qa.judgements import Judgement
@@ -31,19 +31,16 @@ def main() -> None:
     judgements = load(args.judgements, Judgement)
 
     if args.system == "bm25":
-        search = BM25Retriever(refs).search
+        factory = bm25_factory(refs)
     else:
-        from ..evaluation.report import dense_search_fn
+        from ..evaluation.report import dense_factory
         from ..index.embedder import Embedder
-        from ..index.store import VectorStore
 
         embedder = Embedder(args.model, dimensions=args.dimensions, threads=args.threads)
-        store = VectorStore()
-        store.add(refs, embedder.encode([r.text for r in refs], is_query=False))
-        search = dense_search_fn(embedder, store)
+        factory = dense_factory(embedder, refs)
 
     name = args.name or args.system
-    result = evaluate_system(name, search, judgements)
+    result = evaluate_system(name, factory, judgements)
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / f"{name}.json").write_text(json.dumps(result.summary(), indent=2))
     print(json.dumps(result.summary(), indent=2))

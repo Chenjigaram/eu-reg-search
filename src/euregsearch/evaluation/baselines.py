@@ -22,3 +22,18 @@ class BM25Retriever:
         scores = self.model.get_scores(tokenize(query))
         order = sorted(range(len(scores)), key=lambda i: -scores[i])[:k]
         return [(self.refs[i], float(scores[i])) for i in order]
+
+
+def bm25_factory(refs: list[ArticleRef]):
+    """Return a factory yielding a BM25 retriever over one language only."""
+    by_language: dict[str, list[ArticleRef]] = {}
+    for ref in refs:
+        by_language.setdefault(ref.language, []).append(ref)
+    built: dict[str, BM25Retriever] = {}
+
+    def factory(language: str):
+        if language not in built:
+            built[language] = BM25Retriever(by_language.get(language, []))
+        return built[language].search
+
+    return factory

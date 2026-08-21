@@ -1,4 +1,4 @@
-from euregsearch.evaluation.baselines import BM25Retriever
+from euregsearch.evaluation.baselines import BM25Retriever, bm25_factory
 from euregsearch.evaluation.runner import evaluate_system
 from euregsearch.provenance import ArticleRef
 from euregsearch.qa.judgements import Judgement
@@ -33,21 +33,34 @@ def test_bm25_returns_at_most_k():
 
 
 def test_evaluate_system_reports_metrics():
-    result = evaluate_system("bm25", BM25Retriever(REFS).search, JUDGEMENTS, k=10)
+    result = evaluate_system("bm25", bm25_factory(REFS), JUDGEMENTS, k=10)
     assert 0.0 <= result.ndcg <= 1.0
     assert result.queries == 2
 
 
 def test_results_are_broken_down_by_slice():
-    result = evaluate_system("bm25", BM25Retriever(REFS).search, JUDGEMENTS, k=10)
+    result = evaluate_system("bm25", bm25_factory(REFS), JUDGEMENTS, k=10)
     assert "same_language" in result.by_slice()
 
 
 def test_provenance_completeness_is_checked():
-    result = evaluate_system("bm25", BM25Retriever(REFS).search, JUDGEMENTS, k=10)
+    result = evaluate_system("bm25", bm25_factory(REFS), JUDGEMENTS, k=10)
     assert result.provenance_complete is True
 
 
 def test_a_system_returning_nothing_scores_zero_without_crashing():
-    result = evaluate_system("empty", lambda q, k: [], JUDGEMENTS, k=10)
+    result = evaluate_system("empty", lambda lang: (lambda q, k: []), JUDGEMENTS, k=10)
     assert result.ndcg == 0.0 and result.recall == 0.0
+
+
+def test_factory_restricts_retrieval_to_the_target_language():
+    mixed = REFS + [ArticleRef(celex="32014L0065", article="25", language="nl",
+                               version="consolidated", retrieved="2026-08-21", anchor="d1e1-1",
+                               text="beoordeling van geschiktheid en passendheid")]
+    factory = bm25_factory(mixed)
+    hits = factory("nl")("geschiktheid", k=5)
+    assert hits and all(ref.language == "nl" for ref, _ in hits)
+
+
+def test_factory_for_a_language_with_no_articles_returns_nothing():
+    assert bm25_factory(REFS)("de")("anything", k=5) == []
