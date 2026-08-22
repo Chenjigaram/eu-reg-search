@@ -1,0 +1,22 @@
+{
+  "system": "ft-chunk1",
+  "queries": 564,
+  "ndcg": 0.1532,
+  "recall": 0.2131,
+  "mrr": 0.1436,
+  "provenance_complete": true,
+  "slices": {
+    "same_language": {
+      "queries": 141,
+      "ndcg": 0.2078,
+      "recall": 0.2589,
+      "mrr": 0.2069
+    },
+    "cross_lingual": {
+      "queries": 423,
+      "ndcg": 0.1351,
+      "recall": 0.1978,
+      "mrr": 0.1224
+    }
+  }
+}
