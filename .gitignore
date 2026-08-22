@@ -15,3 +15,6 @@ runs/
 index/
 reports/figures/*.png
 !reports/figures/.gitkeep
+
+# Kaggle staging copies of the corpus; regenerate with cli.fetch then cp into kaggle/dataset/
+kaggle/dataset/*.jsonl

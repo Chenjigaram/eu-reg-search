@@ -15,3 +15,14 @@ texts are licensed CC BY 4.0. ESMA Q&A documents are published by the European S
 Markets Authority for supervisory convergence.
 
 Not legal advice.
+
+## Rebuilding
+
+The `.jsonl` files are not tracked in git. Regenerate them from the source repository:
+
+```bash
+python -m euregsearch.cli.fetch
+python -m euregsearch.cli.build_qa
+cp data/processed/*.jsonl kaggle/dataset/
+kaggle datasets version -p kaggle/dataset -m "refresh"
+```
