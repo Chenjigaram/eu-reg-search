@@ -11,7 +11,7 @@ dependencies = ["pydantic>=2.7", "numpy>=1.24", "beautifulsoup4>=4.12", "request
 [project.optional-dependencies]
 pdf = ["pypdf>=4.2"]
 search = ["rank-bm25>=0.2.2"]
-train = ["torch>=2.2", "sentence-transformers>=3.0"]
+train = ["torch>=2.2", "sentence-transformers>=3.0", "datasets>=2.20", "accelerate>=1.1.0"]
 dev = ["pytest>=8.0", "ruff>=0.6"]
 
 [build-system]

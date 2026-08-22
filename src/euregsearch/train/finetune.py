@@ -42,7 +42,7 @@ def train(config: TrainConfig, pairs: list[tuple[str, str, tuple[str, str]]]) ->
         num_train_epochs=config.epochs,
         per_device_train_batch_size=config.batch_size,
         learning_rate=config.learning_rate,
-        warmup_ratio=0.05,
+        warmup_steps=0.05,
         logging_steps=20,
         save_strategy="no",
         use_cpu=True,
