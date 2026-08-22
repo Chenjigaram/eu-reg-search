@@ -29,3 +29,15 @@ def test_config_defaults_are_cpu_safe():
     config = TrainConfig()
     assert config.batch_size <= 32
     assert config.model_name == "intfloat/multilingual-e5-small"
+
+
+def test_config_accepts_a_resume_source_and_sequence_length():
+    from pathlib import Path
+
+    config = TrainConfig(init_from=Path("runs/chunk1/model"), max_seq_length=128)
+    assert config.init_from == Path("runs/chunk1/model")
+    assert config.max_seq_length == 128
+
+
+def test_config_defaults_to_training_from_the_base_model():
+    assert TrainConfig().init_from is None

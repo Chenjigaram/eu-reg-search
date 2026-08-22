@@ -17,6 +17,10 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--judgements", type=Path, default=Path("data/processed/judgements.jsonl"))
     parser.add_argument("--threads", type=int, default=4)
+    parser.add_argument("--offset", type=int, default=0, help="first training pair to use")
+    parser.add_argument("--limit", type=int, default=None, help="how many pairs this chunk trains on")
+    parser.add_argument("--init-from", type=Path, default=None, help="resume from a saved model")
+    parser.add_argument("--max-seq-length", type=int, default=192)
     args = parser.parse_args()
 
     lines = args.articles.read_text(encoding="utf-8").splitlines()
@@ -30,9 +34,13 @@ def main() -> None:
     if not training_is_disjoint(judgements, [key for _a, _p, key in synthetic]):
         raise SystemExit("ABORT: synthetic training questions overlap evaluation articles.")
     pairs = build_cross_lingual_pairs(refs) + synthetic
-    print(f"training pairs: {len(pairs)} ({len(synthetic)} synthetic, "
-          f"{len(held)} evaluation articles excluded from synthetic generation)")
-    config = TrainConfig(output_dir=args.out, epochs=args.epochs, threads=args.threads)
+    total = len(pairs)
+    chunk = pairs[args.offset : args.offset + args.limit] if args.limit else pairs[args.offset :]
+    print(f"pairs {args.offset}..{args.offset + len(chunk)} of {total} "
+          f"({len(synthetic)} synthetic, {len(held)} evaluation articles excluded)")
+    pairs = chunk
+    config = TrainConfig(output_dir=args.out, epochs=args.epochs, threads=args.threads,
+                         max_seq_length=args.max_seq_length, init_from=args.init_from)
     print(json.dumps(train(config, pairs), indent=2))
 
 
