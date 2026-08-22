@@ -5,6 +5,9 @@ Kernels cannot import the package, so the pair logic is restated here and assert
 the same invariants the local test suite enforces.
 """
 import json
+import os
+import random
+import re
 import time
 from collections import defaultdict
 from itertools import permutations
@@ -50,11 +53,21 @@ for a in articles:
         continue
     groups[(a["celex"], a["article"])][a["language"]] = a
 
+# An unbounded cross-lingual build yields up to ten ordered directions per article and
+# drowns out question-to-passage signal -- the first run was 76% alignment pairs and made
+# same-language retrieval worse. Cap alignment, and use Inverse Cloze Task pairs instead of
+# formulaic templates, which only teach the model to match article numbers.
+CROSS_PER_ARTICLE = 2
+ICT_PER_ARTICLE = 2
+SENTENCE = re.compile(r"(?<=[.;:])\s+")
+rng = random.Random(42)
+
 pairs = []
 for key, by_language in groups.items():
-    for source, target in permutations(by_language, 2):
-        if (source, target) in HELD_OUT_DIRECTIONS:
-            continue
+    directions = [d for d in permutations(by_language, 2) if d not in HELD_OUT_DIRECTIONS]
+    if len(directions) > CROSS_PER_ARTICLE:
+        directions = rng.sample(directions, CROSS_PER_ARTICLE)
+    for source, target in directions:
         pairs.append((by_language[source]["text"], by_language[target]["text"], key))
 cross = len(pairs)
 
@@ -62,12 +75,19 @@ for key, by_language in groups.items():
     if key in held:
         continue
     for ref in by_language.values():
-        pairs.append((f"What does Article {ref['article']} of {ref['celex']} provide?", ref["text"], key))
+        sentences = [x.strip() for x in SENTENCE.split(ref["text"]) if len(x.split()) >= 8]
+        if len(sentences) < 2:
+            continue
+        for chosen in rng.sample(sentences, min(ICT_PER_ARTICLE, len(sentences))):
+            remainder = " ".join(x for x in sentences if x != chosen)
+            if remainder:
+                pairs.append((chosen, remainder, key))
 
 synthetic_keys = {k for _a, _p, k in pairs[cross:]}
 assert not (synthetic_keys & held), "LEAK: synthetic questions describe evaluation articles"
 assert not any(k[0] == HELD_OUT_INSTRUMENT for _a, _p, k in pairs), "LEAK: held-out instrument in training"
-print(f"pairs={len(pairs)} (cross_lingual={cross}, synthetic={len(pairs) - cross}); holdouts verified", flush=True)
+print(f"pairs={len(pairs)} (cross_lingual={cross}, ict={len(pairs) - cross}, "
+      f"question_like={100 * (len(pairs) - cross) // len(pairs)}%); holdouts verified", flush=True)
 
 examples = [{"anchor": f"query: {a}", "positive": f"passage: {p}"} for a, p, _k in pairs]
 
@@ -88,6 +108,10 @@ def usable_device() -> str:
 
 device = usable_device()
 on_gpu = device == "cuda"
+if not on_gpu:
+    # The HF Trainer re-detects CUDA independently of the model's device, so hiding the
+    # device is the only reliable way to keep an unusable GPU out of the training loop.
+    os.environ["CUDA_VISIBLE_DEVICES"] = ""
 print(f"device={device}", flush=True)
 
 model = SentenceTransformer("intfloat/multilingual-e5-small", device=device)
@@ -96,13 +120,14 @@ loss = MatryoshkaLoss(model, MultipleNegativesRankingLoss(model), matryoshka_dim
 
 args = SentenceTransformerTrainingArguments(
     output_dir=str(OUT / "checkpoints"),
-    num_train_epochs=3 if on_gpu else 1,
+    num_train_epochs=3 if on_gpu else 2,
     per_device_train_batch_size=64 if on_gpu else 16,
     learning_rate=2e-5,
     warmup_steps=0.05,
     logging_steps=25,
     save_strategy="no",
     fp16=on_gpu,
+    use_cpu=not on_gpu,
     report_to=[],
 )
 
@@ -116,7 +141,7 @@ summary = {
     "device": device,
     "pairs": len(pairs),
     "cross_lingual_pairs": cross,
-    "synthetic_pairs": len(pairs) - cross,
+    "ict_pairs": len(pairs) - cross,
     "epochs": args.num_train_epochs,
     "batch_size": args.per_device_train_batch_size,
     "dimensions": DIMENSIONS,

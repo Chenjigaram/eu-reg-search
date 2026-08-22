@@ -60,3 +60,47 @@ def test_synthetic_pairs_skip_excluded_evaluation_articles():
 
 def test_synthetic_pairs_without_exclusions_are_unchanged():
     assert len(build_synthetic_pairs(REFS)) == len(build_synthetic_pairs(REFS, exclude=set()))
+
+
+LONG = [
+    ref("32014L0065", "25", "en",
+        "Member States shall require investment firms to assess suitability of the service. "
+        "The firm shall obtain information about the client knowledge and experience. "
+        "Where the firm does not obtain that information it shall not recommend the service."),
+    ref("32014L0065", "25", "nl",
+        "De lidstaten schrijven voor dat beleggingsondernemingen de geschiktheid beoordelen. "
+        "De onderneming wint informatie in over de kennis en ervaring van de client. "
+        "Indien die informatie ontbreekt mag de onderneming de dienst niet aanbevelen."),
+]
+
+
+def test_ict_pairs_use_a_sentence_as_the_query():
+    from euregsearch.train.pairs import build_ict_pairs
+
+    pairs = build_ict_pairs(LONG, per_article=1)
+    assert pairs
+    for anchor, passage, _key in pairs:
+        assert anchor and passage and anchor not in passage
+
+
+def test_ict_pairs_skip_excluded_evaluation_articles():
+    from euregsearch.train.pairs import build_ict_pairs
+
+    assert build_ict_pairs(LONG, exclude={("32014L0065", "25")}) == []
+
+
+def test_ict_pairs_skip_articles_too_short_to_split():
+    from euregsearch.train.pairs import build_ict_pairs
+
+    short = [ref("32014R0600", "1", "en", "Short article.")]
+    assert build_ict_pairs(short) == []
+
+
+def test_cross_lingual_pairs_can_be_capped_per_article():
+    capped = build_cross_lingual_pairs(REFS, per_article=1)
+    uncapped = build_cross_lingual_pairs(REFS)
+    assert len(capped) < len(uncapped)
+
+
+def test_capping_is_deterministic():
+    assert build_cross_lingual_pairs(REFS, per_article=1) == build_cross_lingual_pairs(REFS, per_article=1)

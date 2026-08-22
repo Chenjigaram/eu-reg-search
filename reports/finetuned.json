@@ -1,0 +1,22 @@
+{
+  "system": "finetuned",
+  "queries": 564,
+  "ndcg": 0.1474,
+  "recall": 0.224,
+  "mrr": 0.1346,
+  "provenance_complete": true,
+  "slices": {
+    "same_language": {
+      "queries": 141,
+      "ndcg": 0.1678,
+      "recall": 0.2541,
+      "mrr": 0.1555
+    },
+    "cross_lingual": {
+      "queries": 423,
+      "ndcg": 0.1406,
+      "recall": 0.2139,
+      "mrr": 0.1276
+    }
+  }
+}
