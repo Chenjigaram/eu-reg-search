@@ -5,6 +5,8 @@ it — in Dutch, German or French — with a link that proves it.
 
 Evaluated against relevance judgements published by the regulator itself.
 
+**[Results and worked examples →](https://chenjigaram.github.io/eu-reg-search/)**
+
 ## What it does
 
 > *"When does an appropriateness assessment apply rather than a suitability assessment?"*
