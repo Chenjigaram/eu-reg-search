@@ -16,8 +16,20 @@ from sentence_transformers import SentenceTransformer, SentenceTransformerTraine
 from sentence_transformers.losses import MatryoshkaLoss, MultipleNegativesRankingLoss
 from sentence_transformers.training_args import SentenceTransformerTrainingArguments
 
-DATA = Path("/kaggle/input/eu-reg-search-corpus")
 OUT = Path("/kaggle/working")
+
+
+def find_data() -> Path:
+    """Locate the corpus wherever Kaggle mounted it, and say what was found."""
+    root = Path("/kaggle/input")
+    print("mounted inputs:", [str(p) for p in root.glob("*")], flush=True)
+    for candidate in root.rglob("articles.jsonl"):
+        print(f"using corpus at {candidate.parent}", flush=True)
+        return candidate.parent
+    raise SystemExit(f"articles.jsonl not found under {root}; contents: {list(root.rglob('*'))[:20]}")
+
+
+DATA = find_data()
 HELD_OUT_INSTRUMENT = "32017R0653"
 HELD_OUT_DIRECTIONS = (("nl", "en"), ("de", "fr"))
 DIMENSIONS = [384, 256, 128, 64]
@@ -59,8 +71,24 @@ print(f"pairs={len(pairs)} (cross_lingual={cross}, synthetic={len(pairs) - cross
 
 examples = [{"anchor": f"query: {a}", "positive": f"passage: {p}"} for a, p, _k in pairs]
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"device={device} {torch.cuda.get_device_name(0) if device == 'cuda' else ''}", flush=True)
+def usable_device() -> str:
+    """torch.cuda.is_available() is not enough: Kaggle often assigns a P100 (sm_60)
+    while the installed PyTorch only ships kernels for sm_70+. Probe with a real op."""
+    if not torch.cuda.is_available():
+        return "cpu"
+    name = torch.cuda.get_device_name(0)
+    try:
+        (torch.zeros(8, 8, device="cuda") @ torch.zeros(8, 8, device="cuda")).sum().item()
+        print(f"GPU usable: {name}", flush=True)
+        return "cuda"
+    except Exception as error:
+        print(f"GPU {name} present but unusable ({type(error).__name__}); falling back to CPU", flush=True)
+        return "cpu"
+
+
+device = usable_device()
+on_gpu = device == "cuda"
+print(f"device={device}", flush=True)
 
 model = SentenceTransformer("intfloat/multilingual-e5-small", device=device)
 model.max_seq_length = 192
@@ -68,13 +96,13 @@ loss = MatryoshkaLoss(model, MultipleNegativesRankingLoss(model), matryoshka_dim
 
 args = SentenceTransformerTrainingArguments(
     output_dir=str(OUT / "checkpoints"),
-    num_train_epochs=3,
-    per_device_train_batch_size=64,
+    num_train_epochs=3 if on_gpu else 1,
+    per_device_train_batch_size=64 if on_gpu else 16,
     learning_rate=2e-5,
     warmup_steps=0.05,
     logging_steps=25,
     save_strategy="no",
-    fp16=(device == "cuda"),
+    fp16=on_gpu,
     report_to=[],
 )
 
