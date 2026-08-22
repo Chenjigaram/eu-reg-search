@@ -1,0 +1,207 @@
+[
+ {
+  "query": "When an investment firm operates an OTF, at which level should the best execution policy be set? At the level of the investment firm or at the level of the OTF or both? Would similar requirements apply to a market operator operating an OTF?",
+  "target_language": "en",
+  "rank": 1,
+  "ms": 59,
+  "gold": [
+   "MiFID II Art 20"
+  ],
+  "hits": [
+   {
+    "instrument": "MiFID II",
+    "article": "20",
+    "language": "en",
+    "text": "Specific requirements for OTFs 1. Member States shall require that an investment firm and a market operator operating an OTF establishes arrangements preventing the execution of client orders in an OTF against the proprietary capital of the investment firm or market operator operating the OTF or from any entity that is part of the same gr",
+    "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e3901-349-1",
+    "correct": true
+   },
+   {
+    "instrument": "MiFID II",
+    "article": "18",
+    "language": "en",
+    "text": "Trading process and finalisation of transactions in an MTF and an OTF 1. Member States shall require that investment firms and market operators operating an MTF or an OTF, in addition to meeting the organisational requirements laid down in Article 16, establish transparent rules and procedures for fair and orderly trading and establish ob",
+    "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e3781-349-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "64",
+    "language": "en",
+    "text": "Best execution criteria (Articles 27(1) and 24(1) of Directive 2014/65/EU) 1. When executing client orders, investment firms shall take into account the following criteria for determining the relative importance of the factors referred to in Article 27(1) of Directive 2014/65/EU: (a) the characteristics of the client including the categor",
+    "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32017R0565#d1e5052-1-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II",
+    "article": "27",
+    "language": "en",
+    "text": "Obligation to execute orders on terms most favourable to the client 1. Member States shall require that investment firms take all sufficient steps to obtain, when executing orders, the best possible result for their clients taking into account price, costs, speed, likelihood of execution and settlement, size, nature or any other considera",
+    "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e4528-349-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "66",
+    "language": "en",
+    "text": "Execution policy (Article 27(5) and (7) of Directive 2014/65/EU) 1. Investment firms shall review, at least on an annual basis execution policy established pursuant to Article 27(4) of Directive 2014/65/EU, as well as their order execution arrangements. Such a review shall also be carried out whenever a material change as defined in Artic",
+    "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32017R0565#d1e5170-1-1",
+    "correct": false
+   }
+  ]
+ },
+ {
+  "query": "Does the categorisation of a retail investor depend on the definition in Directive 2014/65/EU?",
+  "target_language": "nl",
+  "rank": 1,
+  "ms": 43,
+  "gold": [
+   "MiFID II Art 4",
+   "PRIIPs Art 4"
+  ],
+  "hits": [
+   {
+    "instrument": "PRIIPs",
+    "article": "4",
+    "language": "nl",
+    "text": "In deze verordening wordt verstaan onder: 1. „verpakt retailbeleggingsproduct” (PRIP): beleggingen, inclusief instrumenten die worden uitgegeven door Special Purpose Vehicles zoals omschreven in artikel 13, punt 26, van Richtlijn 2009/138/EG, en door voor een bijzonder doel opgerichte securitiseringsentiteiten zoals omschreven in artikel ",
+    "link": "https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32014R1286#d1e593-1-1",
+    "correct": true
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "15",
+    "language": "nl",
+    "text": "Beleggingsondernemingen met systematische interne afhandeling van derivaten (artikel 4, lid 1, punt 20), van Richtlijn 2014/65/EU) Een beleggingsonderneming wordt als een beleggingsonderneming met systematische interne afhandeling in overeenstemming met artikel 4, lid 1, punt 20, van Richtlijn 2014/65/EU beschouwd ten aanzien van alle der",
+    "link": "https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32017R0565#d1e2030-1-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFIR",
+    "article": "2",
+    "language": "nl",
+    "text": "Definities 1. Voor de toepassing van deze verordening wordt verstaan onder: 1. „beleggingsonderneming” : een beleggingsonderneming in de zin van artikel 4, lid 1, punt 1, van Richtlijn 2014/65/EU; 2. „beleggingsdiensten en -activiteiten” : beleggingsdiensten en -activiteiten in de zin van artikel 4, lid 1, punt 2, van Richtlijn 2014/65/EU",
+    "link": "https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32014R0600#d1e790-84-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "57",
+    "language": "nl",
+    "text": "Verrichten van diensten met betrekking tot niet-complexe instrumenten (artikel 25, lid 4, van Richtlijn 2014/65/EU) Een financieel instrument dat in artikel 25, lid 4, onder a), van Richtlijn 2014/65/EU niet uitdrukkelijk wordt genoemd, wordt voor de toepassing van artikel 25, lid 4, onder a), vi), van Richtlijn 2014/65/EU als niet-comple",
+    "link": "https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32017R0565#d1e4630-1-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "36",
+    "language": "nl",
+    "text": "Onderzoek op beleggingsgebied en publicitaire mededelingen (artikel 24, lid 3, van Richtlijn 2014/65/EU) 1. Voor de toepassing van artikel 37 wordt onder onderzoek op beleggingsgebied verstaan: onderzoek of andere voor distributiekanalen of voor het publiek bestemde informatie waarbij expliciet of impliciet een beleggingsstrategie wordt a",
+    "link": "https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32017R0565#d1e3195-1-1",
+    "correct": false
+   }
+  ]
+ },
+ {
+  "query": "When an investment firm operates an OTF, at which level should the best execution policy be set? At the level of the investment firm or at the level of the OTF or both? Would similar requirements apply to a market operator operating an OTF?",
+  "target_language": "de",
+  "rank": 1,
+  "ms": 62,
+  "gold": [
+   "MiFID II Art 20"
+  ],
+  "hits": [
+   {
+    "instrument": "MiFID II",
+    "article": "20",
+    "language": "de",
+    "text": "Besondere Anforderungen für OTF (1) Die Mitgliedstaaten schreiben vor, dass Wertpapierfirmen und Marktbetreiber, die ein OTF betreiben, Vorkehrungen treffen, durch die die Ausführung von Kundenaufträgen in einem OTF unter Einsatz des Eigenkapitals der Wertpapierfirmen oder Marktbetreiber, die das OTF betreiben, oder einer Einrichtung ders",
+    "link": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0065#d1e3935-349-1",
+    "correct": true
+   },
+   {
+    "instrument": "MiFID II",
+    "article": "18",
+    "language": "de",
+    "text": "Handel und Abschluss von Geschäften über MTF und OTF (1) Die Mitgliedstaaten schreiben vor, dass Wertpapierfirmen und Marktbetreiber, die ein MTF oder ein OTF betreiben, neben der Einhaltung der organisatorischen Anforderungen des Artikels 16 transparente Regeln und Verfahren für einen fairen und ordnungsgemäßen Handel sowie objektive Kri",
+    "link": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0065#d1e3815-349-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "80",
+    "language": "de",
+    "text": "Umstände, die erheblichen Schaden für die Interessen der Anleger und das ordnungsgemäße Funktionieren des Marktes darstellen (Artikel 32 Absatz 1, Artikel 32 Absatz 2 und Artikel 52 Absätze 1 und 2 der Richtlinie 2014/65/EU) (1) Für die Zwecke von Artikel 32 Absatz 1, Artikel 32 Absatz 2 und Artikel 52 Absätze 1 und 2 der Richtlinie 2014/",
+    "link": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32017R0565#d1e5863-1-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II",
+    "article": "31",
+    "language": "de",
+    "text": "Überwachung der Einhaltung der Regeln des MTF oder des OTF und anderer rechtlicher Verpflichtungen (1) Die Mitgliedstaaten schreiben vor, dass Wertpapierfirmen und Marktbetreiber, die ein MTF oder OTF betreiben, für das MTF oder OTF auf Dauer wirksame Vorkehrungen und Verfahren für die regelmäßige Überwachung der Einhaltung der Regeln des",
+    "link": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0065#d1e4823-349-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFIR",
+    "article": "23",
+    "language": "de",
+    "text": "Handelspflichten für Wertpapierfirmen (1) Wertpapierfirmen stellen sicher, dass ihre Handelsgeschäfte mit Aktien, die zum Handel an einem geregelten Markt zugelassen sind oder an einem Handelsplatz gehandelt werden, an einem geregelten Markt oder gegebenenfalls im Rahmen eines MTF, OTF oder systematischen Internalisierers oder an einem Dr",
+    "link": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014R0600#d1e2563-84-1",
+    "correct": false
+   }
+  ]
+ },
+ {
+  "query": "How should investment firms providing the investment service of portfolio management treat inducements received after 3 January 2018 with regards to financial instruments in which the firm has invested on behalf of the client before that date?",
+  "target_language": "fr",
+  "rank": 1,
+  "ms": 56,
+  "gold": [
+   "MiFID II Art 24"
+  ],
+  "hits": [
+   {
+    "instrument": "MiFID II",
+    "article": "24",
+    "language": "fr",
+    "text": "Principes généraux et information des clients 1. Les États membres exigent que, lorsqu’elles fournissent à des clients des services d’investissement ou, le cas échéant, des services auxiliaires, les entreprises d’investissement agissent d’une manière honnête, équitable et professionnelle qui serve au mieux les intérêts desdits clients et ",
+    "link": "https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32014L0065#d1e4472-349-1",
+    "correct": true
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "58",
+    "language": "fr",
+    "text": "Accords conclus avec les clients de détail et professionnels (Article 24, paragraphes 1 et 5, de la directive 2014/65/UE) Les entreprises d'investissement fournissant tout service d'investissement ou le service auxiliaire visé à l'annexe I, section B, paragraphe 1, de la directive 2014/65/UE à un client après la date d'entrée en vigueur d",
+    "link": "https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32017R0565#d1e4810-1-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "47",
+    "language": "fr",
+    "text": "Informations relatives à l'entreprise d'investissement et ses services destinées aux clients existants et potentiels (Article 24, paragraphe 4, de la directive 2014/65/UE) 1. Les entreprises d'investissement fournissent aux clients existants ou potentiels les informations générales suivantes, lorsqu'il y a lieu: a) la raison sociale et l'",
+    "link": "https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32017R0565#d1e4028-1-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "54",
+    "language": "fr",
+    "text": "Évaluation de l'adéquation et rapports d'adéquation (Article 25, paragraphe 2, de la directive 2014/65/UE) 1. Les entreprises d'investissement ne créent aucune ambiguïté ni confusion quant aux responsabilités qui leur incombent lorsqu'elles évaluent l'adéquation de leurs services d'investissement ou instruments financiers conformément à l",
+    "link": "https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32017R0565#d1e4547-1-1",
+    "correct": false
+   },
+   {
+    "instrument": "MiFID II DR",
+    "article": "52",
+    "language": "fr",
+    "text": "Information relative au conseil en investissement (Article 24, paragraphe 4, de la directive 2014/65/UE) 1. Les entreprises d'investissement expliquent de façon claire et concise si et pourquoi un conseil en investissement est qualifié d'indépendant ou de non indépendant ainsi que le type et la nature des restrictions applicables, y compr",
+    "link": "https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32017R0565#d1e4390-1-1",
+    "correct": false
+   }
+  ]
+ }
+]

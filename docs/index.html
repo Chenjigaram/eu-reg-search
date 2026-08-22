@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eu-reg-search — cross-lingual retrieval over EU financial regulation</title>
+<meta name="description" content="Ask a question in English, get the exact provision of EU financial regulation that answers it — in Dutch, German or French — with a EUR-Lex link that proves it.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="eu-reg-search — one question, the same provision, in four languages">
+<meta property="og:description" content="Cross-lingual retrieval over EU financial regulation. Verbatim EUR-Lex text with a deep link that proves it. Evaluated against ESMA's own citations.">
+<meta property="og:url" content="https://chenjigaram.github.io/eu-reg-search/">
+<meta property="og:image" content="https://chenjigaram.github.io/eu-reg-search/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Spectral:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="shell">
+    <span class="wordmark">eu-reg-search</span>
+    <nav>
+      <span class="sections">
+        <a href="#results">Results</a>
+        <a href="#accuracy">Accuracy</a>
+        <a href="#evaluation">Evaluation</a>
+      </span>
+      <a href="https://github.com/Chenjigaram/eu-reg-search">Repository</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="shell">
+    <p class="eyebrow">Cross-lingual retrieval · EU financial regulation</p>
+    <h1>One question. The same provision, in <em>four languages</em>.</h1>
+    <p class="lede">
+      EU law is enacted in 24 equally authentic language versions. Ask in English and this returns the
+      provision that answers you — in Dutch, German or French — as verbatim EUR-Lex text with a link
+      anchored to the article. Nothing is generated, so there is nothing to hallucinate.
+    </p>
+
+    <div class="query">
+      <span class="query-tag">Question&nbsp;→</span>
+      <p>When an investment firm operates an OTF, at which level should the best execution policy be
+      set? At the level of the investment firm or at the level of the OTF or both?</p>
+    </div>
+
+    <div class="parallel">
+
+      <article class="provision">
+        <div class="provision-head"><span class="lang">English</span><span class="latency">70 ms</span></div>
+        <span class="verdict hit">Correct</span>
+        <div class="article-no">Article 20</div>
+        <div class="instrument">MiFID II · Directive 2014/65/EU</div>
+        <p class="passage">Specific requirements for OTFs. 1. Member States shall require that an investment
+        firm and a market operator operating an OTF establishes arrangements preventing the execution of
+        client orders in an OTF against the proprietary capital…</p>
+        <div class="cite">CELEX 32014L0065 · consolidated<br>retrieved 2026-08-21<br>
+        <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e3901-349-1">Open on EUR-Lex ↗</a></div>
+      </article>
+
+      <article class="provision">
+        <div class="provision-head"><span class="lang">Nederlands</span><span class="latency">45 ms</span></div>
+        <span class="verdict hit">Correct</span>
+        <div class="article-no">Artikel 20</div>
+        <div class="instrument">MiFID II · Richtlijn 2014/65/EU</div>
+        <p class="passage">Specifieke eisen voor OTF’s. 1. De lidstaten schrijven voor dat een
+        beleggingsonderneming en een marktexploitant die een OTF exploiteert, regelingen treft om te
+        voorkomen dat orders van cliënten via een OTF worden uitgevoerd…</p>
+        <div class="cite">CELEX 32014L0065 · consolidated<br>retrieved 2026-08-21<br>
+        <a href="https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32014L0065#d1e3921-349-1">Open op EUR-Lex ↗</a></div>
+      </article>
+
+      <article class="provision">
+        <div class="provision-head"><span class="lang">Deutsch</span><span class="latency">42 ms</span></div>
+        <span class="verdict hit">Correct</span>
+        <div class="article-no">Artikel 20</div>
+        <div class="instrument">MiFID II · Richtlinie 2014/65/EU</div>
+        <p class="passage">Besondere Anforderungen für OTF. (1) Die Mitgliedstaaten schreiben vor, dass
+        Wertpapierfirmen und Marktbetreiber, die ein OTF betreiben, Vorkehrungen treffen, durch die die
+        Ausführung von Kundenaufträgen in einem OTF…</p>
+        <div class="cite">CELEX 32014L0065 · consolidated<br>retrieved 2026-08-21<br>
+        <a href="https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0065#d1e3935-349-1">Auf EUR-Lex öffnen ↗</a></div>
+      </article>
+
+      <article class="provision">
+        <div class="provision-head"><span class="lang">Français</span><span class="latency">41 ms</span></div>
+        <span class="verdict miss">Wrong article</span>
+        <div class="article-no">Article 18</div>
+        <div class="instrument">MiFID II · Directive 2014/65/UE</div>
+        <p class="passage">Processus de négociation et dénouement des transactions sur les MTF et les OTF.
+        1. Outre les obligations organisationnelles prévues à l’article 16, les États membres exigent des
+        entreprises d’investissement…</p>
+        <div class="cite">CELEX 32014L0065 · consolidated<br>retrieved 2026-08-21<br>
+        <a href="https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32014L0065#d1e4162-349-1">Ouvrir sur EUR-Lex ↗</a></div>
+      </article>
+
+    </div>
+
+    <p class="parallel-note">
+      Three languages return Article 20. French returns Article 18 — the neighbouring provision, on
+      trading on MTFs and OTFs rather than the specific OTF requirements. That miss is the argument for
+      the citation: the reader clicks through and catches it in seconds. A system that answered in prose
+      would have stated it as fact.
+    </p>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="shell">
+    <div class="stat"><div class="n">1,195</div><div class="k">articles indexed</div></div>
+    <div class="stat"><div class="n">4</div><div class="k">languages, any direction</div></div>
+    <div class="stat"><div class="n">45 ms</div><div class="k">median query</div></div>
+    <div class="stat"><div class="n">564</div><div class="k">evaluation queries</div></div>
+  </div>
+</div>
+
+<section class="band" id="results">
+  <div class="shell">
+    <span class="section-no">Results</span>
+    <h2>Neither search method wins. Fusing them does.</h2>
+    <p>
+      564 queries built from 141 ESMA question-to-article pairs, scored by nDCG@10 — the labels come
+      from the regulator's own citations, not from generated queries scored against themselves.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>System</th><th>Overall</th><th>Same-language</th><th>Cross-lingual</th></tr>
+        </thead>
+        <tbody>
+          <tr class="win"><td>Hybrid — lexical + dense</td><td class="num">0.182</td><td class="num">0.282</td><td class="num">0.149</td></tr>
+          <tr><td><code>multilingual-e5-small</code> dense</td><td class="num">0.154</td><td class="num">0.236</td><td class="num">0.127</td></tr>
+          <tr><td>BM25 lexical</td><td class="num">0.152</td><td class="num best">0.322</td><td class="num">0.095</td></tr>
+          <tr><td>Fine-tuned embedder</td><td class="num">0.146</td><td class="num">0.171</td><td class="num">0.138</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panels">
+      <div class="panel">
+        <h3>Same-language retrieval</h3>
+        <div class="bar-row top"><span class="name">BM25</span><span class="track"><span class="fill" style="width:92.0%"></span></span><span class="v">0.322</span></div>
+        <div class="bar-row"><span class="name">Hybrid</span><span class="track"><span class="fill" style="width:80.6%"></span></span><span class="v">0.282</span></div>
+        <div class="bar-row"><span class="name">Dense</span><span class="track"><span class="fill" style="width:67.4%"></span></span><span class="v">0.236</span></div>
+        <div class="bar-row"><span class="name">Fine-tuned</span><span class="track"><span class="fill" style="width:48.9%"></span></span><span class="v">0.171</span></div>
+        <p class="axis">0 ——— 0.35 nDCG@10</p>
+      </div>
+      <div class="panel">
+        <h3>Cross-lingual retrieval</h3>
+        <div class="bar-row top"><span class="name">Hybrid</span><span class="track"><span class="fill" style="width:42.6%"></span></span><span class="v">0.149</span></div>
+        <div class="bar-row"><span class="name">Fine-tuned</span><span class="track"><span class="fill" style="width:39.4%"></span></span><span class="v">0.138</span></div>
+        <div class="bar-row"><span class="name">Dense</span><span class="track"><span class="fill" style="width:36.3%"></span></span><span class="v">0.127</span></div>
+        <div class="bar-row"><span class="name">BM25</span><span class="track"><span class="fill" style="width:27.1%"></span></span><span class="v">0.095</span></div>
+        <p class="axis">0 ——— 0.35 nDCG@10</p>
+      </div>
+    </div>
+
+    <p class="pull">
+      Overall, BM25 scores 0.152 and the embedder 0.154. Read only that column and the honest
+      conclusion is “no difference.” It is wrong twice.
+    </p>
+
+    <p style="margin-top:26px">
+      BM25 beats the embedder by 36% when the question and the law share a language — legal terminology
+      is distinctive, and exact terms match. The embedder beats BM25 by 33% across languages, which BM25
+      cannot do at all. Reciprocal rank fusion takes both, and lands 19% above the best single system
+      with the best cross-lingual score of anything tested.
+    </p>
+  </div>
+</section>
+
+<section class="band" id="accuracy">
+  <div class="shell">
+    <span class="section-no">How often is it actually right</span>
+    <h2>It narrows 1,195 articles to ten, and is right about half the time.</h2>
+    <p>
+      Measured over the 141 same-language questions. These are the numbers a compliance team would
+      plan around, so they are stated plainly rather than folded into an average.
+    </p>
+
+    <div class="funnel">
+      <div class="rung"><div class="pct">17%</div><div class="lbl">the cited article is the top result</div></div>
+      <div class="rung"><div class="pct">40%</div><div class="lbl">it is somewhere in the top five</div></div>
+      <div class="rung wide"><div class="pct">45%</div><div class="lbl">it is somewhere in the top ten</div></div>
+    </div>
+
+    <p style="margin-top:30px">
+      This is a shortlisting tool, not an oracle. Reading MiFID II end to end means 1.3 MB of statute;
+      reading ten cited provisions takes a minute, and just under half the time the right one is among
+      them. Every candidate arrives with the article number, the CELEX id, the version indexed and a
+      deep link, so the reader confirms or discards it without leaving the page.
+    </p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="shell">
+    <span class="section-no">Negative result</span>
+    <h2>Fine-tuning did not help, and that is reported too.</h2>
+    <p>
+      Contrastive fine-tuning of the embedder was tried twice and made retrieval slightly worse overall,
+      0.154 to 0.146. It improved cross-lingual retrieval, 0.127 to 0.138, while degrading same-language
+      retrieval further, 0.236 to 0.171.
+    </p>
+    <p>
+      The first run was 76% cross-lingual alignment pairs, teaching <em>“these two texts are the same
+      provision”</em> rather than <em>“this question is answered by this provision.”</em> So the mix was
+      inverted: alignment pairs capped, formulaic templates replaced with Inverse Cloze Task pairs that
+      draw a real sentence from the article as the query. Question-like pairs went from 23% to 74%, and
+      epochs doubled.
+    </p>
+    <p class="pull">Overall nDCG moved from 0.147 to 0.146. The obvious explanation was tested and rejected.</p>
+    <p style="margin-top:26px">
+      The remaining likely cause is corpus size. 690 trainable articles is too little for contrastive
+      adaptation to beat general-purpose pretraining. Domain fine-tuning is not free, and below some
+      corpus size it is negative — which is worth knowing before spending the GPU budget.
+    </p>
+  </div>
+</section>
+
+<section class="band" id="evaluation">
+  <div class="shell">
+    <span class="section-no">Evaluation design</span>
+    <h2>The relevance labels come from the regulator, not from us.</h2>
+    <p>
+      ESMA and Joint Committee Q&amp;A documents state a question, an answer, and the articles the answer
+      relies on. That yields <code>(question, language) → [cited articles]</code> judgements anyone can
+      verify by opening the PDF. No LLM judge, and no self-generated queries scored against themselves.
+    </p>
+    <p>
+      Yield is itself a finding: of <strong>546 Q&amp;A blocks</strong> extracted from five documents,
+      only <strong>141 (25%)</strong> cite an article resolvable to an indexed instrument. The PRIIPs
+      consolidated Q&amp;A yields just 4%, because its answers cite <em>annexes</em> — the KID methodology
+      lives there rather than in numbered articles, and this system indexes articles only. An abort gate
+      refuses to proceed below 120 usable pairs. It fired at 19, survived two parser fixes to 71, and
+      passed only at 141 after three more source documents were added.
+    </p>
+
+    <h3 class="sub">Known gaps, stated rather than hidden</h3>
+    <ul class="gaps">
+      <li><code>held_out_instrument</code>: 0 judgements. No PRIIPs RTS citations survived extraction.</li>
+      <li><code>held_out_direction</code>: 0 judgements. Every ESMA question is in English, so <code>nl→en</code> and <code>de→fr</code> never occur. The spec promised holdouts the data cannot populate.</li>
+      <li>64 distinct articles are cited across 141 questions, so effective diversity is 64, not 141.</li>
+      <li>Single seed. Only large gaps are claimed.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="band">
+  <div class="shell">
+    <span class="section-no">Provenance</span>
+    <h2>Completeness is a defect, not a metric.</h2>
+    <p>
+      Every result carries the verbatim passage, instrument, article number, CELEX id, language, version
+      indexed, retrieval date, and a EUR-Lex deep link anchored to the article. Anything below 100%
+      fails the build rather than lowering a score.
+    </p>
+    <p>
+      MiFID II has been amended repeatedly. Consolidated text differs from the original, and citing the
+      wrong version is a compliance error — so the version is recorded and displayed with every hit.
+    </p>
+    <p>
+      The EUR-Lex web UI sits behind a bot challenge that returns 202 with an empty body to automated
+      clients. The corpus is fetched instead through the Publications Office <strong>Cellar</strong>
+      endpoint, the sanctioned machine-to-machine route.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="shell">
+    <div class="links">
+      <a href="https://github.com/Chenjigaram/eu-reg-search">Repository</a>
+      <a href="https://github.com/Chenjigaram/eu-reg-search#results">Full results</a>
+      <a href="https://eur-lex.europa.eu/">EUR-Lex</a>
+    </div>
+    <p>
+      Corpus text: EUR-Lex, © European Union, reused under Commission Decision 2011/833/EU; consolidated
+      texts CC BY 4.0. ESMA Q&amp;A documents published for supervisory convergence. Code MIT.
+      This page is an independent open-source project and is not affiliated with, or endorsed by, the
+      European Union or ESMA.
+    </p>
+    <p class="disclaim" style="margin-top:18px">Not legal advice. This retrieves provisions; a human interprets them.</p>
+  </div>
+</footer>
+
+</body>
+</html>

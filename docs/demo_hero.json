@@ -1,0 +1,54 @@
+{
+ "query": "When an investment firm operates an OTF, at which level should the best execution policy be set? At the level of the investment firm or at the level of the OTF or both? Would similar requirements apply to a market operator operating an OTF?",
+ "gold": "MiFID II, Article 20",
+ "columns": [
+  {
+   "language": "en",
+   "label": "English",
+   "ms": 70,
+   "celex": "32014L0065",
+   "article": "20",
+   "correct": true,
+   "text": "Specific requirements for OTFs 1. Member States shall require that an investment firm and a market operator operating an OTF establishes arrangements preventing the execution of client orders in an OTF against the proprietary capital of the investment firm or market operator operating the OTF or fro",
+   "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e3901-349-1",
+   "retrieved": "2026-08-21",
+   "version": "consolidated"
+  },
+  {
+   "language": "nl",
+   "label": "Nederlands",
+   "ms": 45,
+   "celex": "32014L0065",
+   "article": "20",
+   "correct": true,
+   "text": "Specifieke eisen voor OTF’s 1. De lidstaten schrijven voor dat een beleggingsonderneming en een marktexploitant die een OTF exploiteert, regelingen treft om te voorkomen dat orders van cliënten via een OTF worden uitgevoerd door te handelen met het eigen kapitaal van de beleggingsonderneming of mark",
+   "link": "https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32014L0065#d1e3921-349-1",
+   "retrieved": "2026-08-21",
+   "version": "consolidated"
+  },
+  {
+   "language": "de",
+   "label": "Deutsch",
+   "ms": 42,
+   "celex": "32014L0065",
+   "article": "20",
+   "correct": true,
+   "text": "Besondere Anforderungen für OTF (1) Die Mitgliedstaaten schreiben vor, dass Wertpapierfirmen und Marktbetreiber, die ein OTF betreiben, Vorkehrungen treffen, durch die die Ausführung von Kundenaufträgen in einem OTF unter Einsatz des Eigenkapitals der Wertpapierfirmen oder Marktbetreiber, die das OT",
+   "link": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0065#d1e3935-349-1",
+   "retrieved": "2026-08-21",
+   "version": "consolidated"
+  },
+  {
+   "language": "fr",
+   "label": "Français",
+   "ms": 41,
+   "celex": "32014L0065",
+   "article": "18",
+   "correct": false,
+   "text": "Processus de négociation et dénouement des transactions sur les MTF et les OTF 1. Outre les obligations organisationnelles prévues à l’article 16, les États membres exigent des entreprises d’investissement et des opérateurs de marché exploitant un MTF ou un OTF qu’ils instaurent des règles et des pr",
+   "link": "https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32014L0065#d1e4162-349-1",
+   "retrieved": "2026-08-21",
+   "version": "consolidated"
+  }
+ ]
+}
