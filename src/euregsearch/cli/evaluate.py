@@ -19,7 +19,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate a retrieval system")
     parser.add_argument("--articles", type=Path, default=Path("data/processed/articles.jsonl"))
     parser.add_argument("--judgements", type=Path, default=Path("data/processed/judgements.jsonl"))
-    parser.add_argument("--system", choices=["bm25", "dense", "finetuned"], default="bm25")
+    parser.add_argument("--system", choices=["bm25", "dense", "finetuned", "hybrid"], default="bm25")
     parser.add_argument("--model", default="intfloat/multilingual-e5-small")
     parser.add_argument("--dimensions", type=int, default=None)
     parser.add_argument("--threads", type=int, default=4)
@@ -32,6 +32,13 @@ def main() -> None:
 
     if args.system == "bm25":
         factory = bm25_factory(refs)
+    elif args.system == "hybrid":
+        from ..evaluation.hybrid import hybrid_factory
+        from ..evaluation.report import dense_factory
+        from ..index.embedder import Embedder
+
+        embedder = Embedder(args.model, dimensions=args.dimensions, threads=args.threads)
+        factory = hybrid_factory(bm25_factory(refs), dense_factory(embedder, refs))
     else:
         from ..evaluation.report import dense_factory
         from ..index.embedder import Embedder
