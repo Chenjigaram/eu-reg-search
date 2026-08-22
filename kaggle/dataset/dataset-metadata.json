@@ -1,0 +1,23 @@
+{
+  "title": "EU reg search corpus",
+  "id": "chenjigaram/eu-reg-search-corpus",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "resources": [
+    {
+      "path": "articles.jsonl",
+      "description": "EUR-Lex articles from five instruments in EN/NL/DE/FR, with CELEX id, article number, anchor and provenance. Source: EUR-Lex, (c) European Union, reused under Commission Decision 2011/833/EU."
+    },
+    {
+      "path": "judgements.jsonl",
+      "description": "Retrieval relevance judgements derived from ESMA and Joint Committee Q&A documents: question to cited article, with evaluation slice."
+    },
+    {
+      "path": "qa.jsonl",
+      "description": "Extracted ESMA Q&A entries with resolved article citations."
+    }
+  ]
+}
