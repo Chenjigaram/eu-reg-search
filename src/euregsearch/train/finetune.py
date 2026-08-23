@@ -17,7 +17,7 @@ class TrainConfig:
     learning_rate: float = 2e-5
     dimensions: tuple[int, ...] = field(default_factory=lambda: DEFAULT_DIMENSIONS)
     threads: int = 4
-    max_seq_length: int = 192
+    max_seq_length: int = 512
     init_from: Path | None = None
 
 

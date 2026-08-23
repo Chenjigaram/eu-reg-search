@@ -63,3 +63,30 @@ def test_collapse_respects_k():
 def test_collapse_separates_languages():
     collapsed = collapse_by_article([(ref("4", "x", "en"), 0.5), (ref("4", "x", "nl"), 0.4)], k=10)
     assert len(collapsed) == 2
+
+
+def test_passage_ict_pairs_are_built_per_chunk_not_per_article():
+    from euregsearch.train.pairs import build_passage_ict_pairs
+
+    long_text = ". ".join(f"clause {i} of the provision applies to firms" for i in range(20))
+    chunks = chunk_refs([ref("4", long_text)], FakeTokenizer(), size=30, overlap=5)
+    assert len(chunks) > 1
+    pairs = build_passage_ict_pairs(chunks, per_passage=1)
+    assert 1 < len(pairs) <= len(chunks)
+    assert all(key == ("32014L0065", "4") for _a, _p, key in pairs)
+
+
+def test_passage_ict_pairs_exclude_blocked_articles():
+    from euregsearch.train.pairs import build_passage_ict_pairs
+
+    text = ". ".join(f"clause {i} of the provision applies to firms" for i in range(6))
+    pairs = build_passage_ict_pairs([ref("4", text)], exclude={("32014L0065", "4")})
+    assert pairs == []
+
+
+def test_passage_ict_query_is_not_inside_its_own_positive():
+    from euregsearch.train.pairs import build_passage_ict_pairs
+
+    text = ". ".join(f"clause {i} of the provision applies to firms" for i in range(6))
+    for anchor, positive, _key in build_passage_ict_pairs([ref("4", text)], per_passage=3):
+        assert anchor not in positive

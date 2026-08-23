@@ -18,6 +18,7 @@ from datasets import Dataset
 from sentence_transformers import SentenceTransformer, SentenceTransformerTrainer
 from sentence_transformers.losses import MatryoshkaLoss, MultipleNegativesRankingLoss
 from sentence_transformers.training_args import SentenceTransformerTrainingArguments
+from transformers import AutoTokenizer
 
 OUT = Path("/kaggle/working")
 
@@ -36,6 +37,33 @@ DATA = find_data()
 HELD_OUT_INSTRUMENT = "32017R0653"
 HELD_OUT_DIRECTIONS = (("nl", "en"), ("de", "fr"))
 DIMENSIONS = [384, 256, 128, 64]
+MODEL_NAME = "intfloat/multilingual-e5-small"
+CHUNK_TOKENS = 400
+OVERLAP_TOKENS = 80
+MIN_TAIL_TOKENS = 40
+TRAIN_SEQ_LENGTH = 512
+
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+
+
+def chunk_text(text, size=CHUNK_TOKENS, overlap=OVERLAP_TOKENS):
+    """Articles run far past the model window -- the median is 386 tokens and MiFID II
+    Article 4 is 4955. Training on a truncated article while retrieval scores chunks means
+    the model never sees the text it is later asked to match."""
+    ids = tokenizer.encode(text, add_special_tokens=False)
+    if len(ids) <= size:
+        return [text]
+    step = size - overlap
+    min_tail = max(1, min(MIN_TAIL_TOKENS, size // 4))
+    pieces = []
+    for start in range(0, len(ids), step):
+        window = ids[start:start + size]
+        if len(window) < min_tail and pieces:
+            break
+        pieces.append(tokenizer.decode(window))
+        if start + size >= len(ids):
+            break
+    return pieces
 
 
 def load(name):
@@ -58,7 +86,7 @@ for a in articles:
 # same-language retrieval worse. Cap alignment, and use Inverse Cloze Task pairs instead of
 # formulaic templates, which only teach the model to match article numbers.
 CROSS_PER_ARTICLE = 2
-ICT_PER_ARTICLE = 2
+ICT_PER_PASSAGE = 1
 SENTENCE = re.compile(r"(?<=[.;:])\s+")
 rng = random.Random(42)
 
@@ -68,20 +96,24 @@ for key, by_language in groups.items():
     if len(directions) > CROSS_PER_ARTICLE:
         directions = rng.sample(directions, CROSS_PER_ARTICLE)
     for source, target in directions:
-        pairs.append((by_language[source]["text"], by_language[target]["text"], key))
+        left = chunk_text(by_language[source]["text"])
+        right = chunk_text(by_language[target]["text"])
+        for i in range(min(len(left), len(right))):
+            pairs.append((left[i], right[i], key))
 cross = len(pairs)
 
 for key, by_language in groups.items():
     if key in held:
         continue
     for ref in by_language.values():
-        sentences = [x.strip() for x in SENTENCE.split(ref["text"]) if len(x.split()) >= 8]
-        if len(sentences) < 2:
-            continue
-        for chosen in rng.sample(sentences, min(ICT_PER_ARTICLE, len(sentences))):
-            remainder = " ".join(x for x in sentences if x != chosen)
-            if remainder:
-                pairs.append((chosen, remainder, key))
+        for passage in chunk_text(ref["text"]):
+            sentences = [x.strip() for x in SENTENCE.split(passage) if len(x.split()) >= 8]
+            if len(sentences) < 2:
+                continue
+            for chosen in rng.sample(sentences, min(ICT_PER_PASSAGE, len(sentences))):
+                remainder = " ".join(x for x in sentences if x != chosen)
+                if remainder:
+                    pairs.append((chosen, remainder, key))
 
 synthetic_keys = {k for _a, _p, k in pairs[cross:]}
 assert not (synthetic_keys & held), "LEAK: synthetic questions describe evaluation articles"
@@ -114,8 +146,8 @@ if not on_gpu:
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
 print(f"device={device}", flush=True)
 
-model = SentenceTransformer("intfloat/multilingual-e5-small", device=device)
-model.max_seq_length = 192
+model = SentenceTransformer(MODEL_NAME, device=device)
+model.max_seq_length = TRAIN_SEQ_LENGTH
 loss = MatryoshkaLoss(model, MultipleNegativesRankingLoss(model), matryoshka_dims=DIMENSIONS)
 
 args = SentenceTransformerTrainingArguments(
@@ -145,7 +177,7 @@ summary = {
     "epochs": args.num_train_epochs,
     "batch_size": args.per_device_train_batch_size,
     "dimensions": DIMENSIONS,
-    "max_seq_length": 192,
+    "max_seq_length": TRAIN_SEQ_LENGTH,
     "train_seconds": round(duration, 1),
 }
 (OUT / "training_summary.json").write_text(json.dumps(summary, indent=2))
