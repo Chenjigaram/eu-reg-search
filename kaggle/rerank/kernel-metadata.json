@@ -1,0 +1,15 @@
+{
+  "id": "chenjigaram/eu-reg-search-rerank",
+  "title": "eu reg search rerank",
+  "code_file": "rerank.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "chenjigaram/eu-reg-search-corpus"
+  ],
+  "competition_sources": [],
+  "kernel_sources": []
+}
