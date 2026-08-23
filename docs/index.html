@@ -225,6 +225,112 @@ GOLD articles (en): 63
       directive.
     </p>
 
+    <h2>What the model could actually see</h2>
+
+    <p>
+      The clearest way to show this is three real questions where chunking turned a wrong answer into a
+      right one. In each case the passage that answers the question sits beyond the point where the old
+      index stopped reading, so the correct article was not ranked badly. It was not reachable.
+    </p>
+
+      <div class="demo">
+        <div class="demo-q"><span>Question</span>Which internal telephone conversations or electronic communications regarding the handling of orders and transactions need to be recorded?</div>
+
+        <div class="ruler">
+          <div class="ruler-label">MiFID II, Article 16 — 2,007 tokens</div>
+          <div class="bar">
+            <span class="seen" style="width:25.5%"></span>
+            <span class="unseen-label" style="left:62.8%">not read by the old index</span>
+            <span class="answer" style="left:49.2%"></span>
+          </div>
+          <div class="ruler-scale"><span>start</span><span>512-token limit at 26%</span><span>end</span></div>
+        </div>
+
+        <div class="demo-pair">
+          <div class="demo-side">
+            <h4>Before — whole article, truncated</h4>
+            <span class="verdict miss">Wrong article</span>
+            <div class="art">MiFID II DR, Article 76</div>
+            <p class="snip">Recording of telephone conversations or electronic communications (Article 16(7) of Directive 2014/65/EU) 1. Investment firms shall establish, implement and maintain an effective recording o…</p>
+          </div>
+          <div class="demo-side">
+            <h4>After — chunked</h4>
+            <span class="verdict hit">Correct</span>
+            <div class="art">MiFID II, Article 16</div>
+            <p class="snip">or in the provision of client order services that relate to the reception, transmission and execution of client orders, even if those conversations or communications do not result in the con…</p>
+          </div>
+        </div>
+
+        <div class="demo-foot">the matching passage begins 49% into the article — past the old cutoff</div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-q"><span>Question</span>Can shares in non -UCITS collective investment undertakings explicitly excluded under point (i) of Article 25(4)(a) of MiFID II be nevertheless assessed against the criteria set out in Article 57 of…</div>
+
+        <div class="ruler">
+          <div class="ruler-label">MiFID II, Article 25 — 2,023 tokens</div>
+          <div class="bar">
+            <span class="seen" style="width:25.3%"></span>
+            <span class="unseen-label" style="left:62.7%">not read by the old index</span>
+            <span class="answer" style="left:33.8%"></span>
+          </div>
+          <div class="ruler-scale"><span>start</span><span>512-token limit at 25%</span><span>end</span></div>
+        </div>
+
+        <div class="demo-pair">
+          <div class="demo-side">
+            <h4>Before — whole article, truncated</h4>
+            <span class="verdict miss">Wrong article</span>
+            <div class="art">MiFID II DR, Article 57</div>
+            <p class="snip">Provision of services in non-complex instruments (Article 25(4) of Directive 2014/65/EU) A financial instrument which is not explicitly specified in Article 25(4)(a) of Directive 2014/65/EU …</p>
+          </div>
+          <div class="demo-side">
+            <h4>After — chunked</h4>
+            <span class="verdict hit">Correct</span>
+            <div class="art">MiFID II, Article 25</div>
+            <p class="snip">shares admitted to trading on a regulated market or on an equivalent third-country market or on a MTF, where those are shares in companies, and excluding shares in non-UCITS collective inves…</p>
+          </div>
+        </div>
+
+        <div class="demo-foot">the matching passage begins 34% into the article — past the old cutoff</div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-q"><span>Question</span>Does the minimum tick size regime under Article 49 of MiFID II apply to all orders for which a pre-trade transparency waiver can be granted in accordance with Article 4 of MiFIR?</div>
+
+        <div class="ruler">
+          <div class="ruler-label">MiFIR, Article 4 — 1,426 tokens</div>
+          <div class="bar">
+            <span class="seen" style="width:35.9%"></span>
+            <span class="unseen-label" style="left:67.9%">not read by the old index</span>
+            <span class="answer" style="left:67.4%"></span>
+          </div>
+          <div class="ruler-scale"><span>start</span><span>512-token limit at 36%</span><span>end</span></div>
+        </div>
+
+        <div class="demo-pair">
+          <div class="demo-side">
+            <h4>Before — whole article, truncated</h4>
+            <span class="verdict miss">Wrong article</span>
+            <div class="art">MiFIR, Article 8</div>
+            <p class="snip">Pre-trade transparency requirements for trading venues in respect of bonds, structured finance products, emission allowances and derivatives 1. Market operators and investment firms operatin…</p>
+          </div>
+          <div class="demo-side">
+            <h4>After — chunked</h4>
+            <span class="verdict hit">Correct</span>
+            <div class="art">MiFIR, Article 4</div>
+            <p class="snip">original purpose or if it believes that the waiver is being used to circumvent the requirements established in this Article. Competent authorities shall notify ESMA and other competent autho…</p>
+          </div>
+        </div>
+
+        <div class="demo-foot">the matching passage begins 67% into the article — past the old cutoff</div>
+      </div>
+
+    <p>
+      The shaded part of each bar is everything the old index could read. The marker is where the answer
+      actually lives. Nothing about the ranking maths was wrong; the text simply was not there.
+    </p>
+
     <h2>The part I did not expect</h2>
 
     <p>

@@ -254,3 +254,64 @@ footer .links { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 24px; 
   .post-shell { padding: 0 20px; }
   .post h2 { margin-top: 34px; }
 }
+
+/* ---------- before / after chunking demo ---------- */
+.demo { margin: 0 0 30px; border: 1px solid var(--rule-strong); border-radius: 3px; background: var(--panel); }
+.demo + .demo { margin-top: 26px; }
+.demo-q {
+  padding: 15px 18px; border-bottom: 1px solid var(--rule); font-family: var(--display);
+  font-size: 1rem; line-height: 1.45; color: var(--ink);
+}
+.demo-q span {
+  display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 7px;
+}
+
+/* the article as a ruler: what the old index could actually read */
+.ruler { padding: 18px 18px 6px; }
+.ruler-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 9px;
+}
+.bar { position: relative; height: 30px; background: #eef2f8; border-radius: 2px; overflow: hidden; }
+.bar .seen { position: absolute; inset: 0 auto 0 0; background: #dbe4f2; }
+.bar .seen::after {
+  content: "read"; position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  font-family: var(--mono); font-size: 9px; letter-spacing: .06em; color: var(--ink-soft);
+}
+.bar .unseen-label {
+  position: absolute; top: 50%; transform: translate(-50%, -50%); white-space: nowrap;
+  font-family: var(--mono); font-size: 9px; letter-spacing: .06em; color: var(--muted);
+}
+.bar .answer { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--miss); }
+.bar .answer::after {
+  content: ""; position: absolute; left: -3px; top: -4px; width: 9px; height: 9px;
+  border-radius: 50%; background: var(--miss);
+}
+.ruler-scale {
+  display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px;
+  color: var(--muted); margin-top: 6px;
+}
+
+.demo-pair { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule); }
+.demo-side { padding: 15px 18px 17px; }
+.demo-side + .demo-side { border-left: 1px solid var(--rule); }
+.demo-side h4 {
+  margin: 0 0 10px; font-family: var(--mono); font-size: 10px; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+}
+.demo-side .verdict { margin-bottom: 9px; }
+.demo-side .art { font-family: var(--display); font-size: 1.06rem; font-weight: 600; }
+.demo-side .snip {
+  font-family: var(--display); font-size: .82rem; line-height: 1.5; color: var(--ink-soft); margin: 8px 0 0;
+}
+.demo-foot {
+  border-top: 1px solid var(--rule); padding: 11px 18px; font-family: var(--mono);
+  font-size: 11px; color: var(--muted);
+}
+
+@media (max-width: 620px) {
+  .demo-pair { grid-template-columns: 1fr; }
+  .demo-side + .demo-side { border-left: 0; border-top: 1px solid var(--rule); }
+  .bar .unseen-label { display: none; }
+}

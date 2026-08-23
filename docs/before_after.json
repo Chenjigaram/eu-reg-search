@@ -1,0 +1,35 @@
+[
+ {
+  "query": "Which internal telephone conversations or electronic communications regarding the handling of orders and transactions need to be recorded?",
+  "gold": "32014L0065 Art 16",
+  "wrong_article": "32017R0565 Art 76",
+  "wrong_text": "Recording of telephone conversations or electronic communications (Article 16(7) of Directive 2014/65/EU) 1. Investment firms shall establish, implement and maintain an effective recording of telephone conversations and electronic communications policy, set ou",
+  "right_text": "or in the provision of client order services that relate to the reception, transmission and execution of client orders, even if those conversations or communications do not result in the conclusion of such transactions or in the provision of client order services. For those purposes, an investment f",
+  "article_tokens": 2007,
+  "window": 512,
+  "match_starts_at_fraction": 0.492,
+  "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e3559-349-1"
+ },
+ {
+  "query": "Can shares in non -UCITS collective investment undertakings explicitly excluded under point (i) of Article 25(4)(a) of MiFID II be nevertheless assessed against the criteria set out in Article 57 of the MiFID II Delegated Regulation and as a consequence pot entially be deemed non - complex financial instruments for the purposes of the appropriateness test?",
+  "gold": "32014L0065 Art 25",
+  "wrong_article": "32017R0565 Art 57",
+  "wrong_text": "Provision of services in non-complex instruments (Article 25(4) of Directive 2014/65/EU) A financial instrument which is not explicitly specified in Article 25(4)(a) of Directive 2014/65/EU shall be considered as non-complex for the purposes of Article 25(4)(a",
+  "right_text": "shares admitted to trading on a regulated market or on an equivalent third-country market or on a MTF, where those are shares in companies, and excluding shares in non-UCITS collective investment undertakings and shares that embed a derivative; (ii) bonds or other forms of securitised debt admitted ",
+  "article_tokens": 2023,
+  "window": 512,
+  "match_starts_at_fraction": 0.338,
+  "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e4314-349-1"
+ },
+ {
+  "query": "Does the minimum tick size regime under Article 49 of MiFID II apply to all orders for which a pre-trade transparency waiver can be granted in accordance with Article 4 of MiFIR?",
+  "gold": "32014R0600 Art 4",
+  "wrong_article": "32014R0600 Art 8",
+  "wrong_text": "Pre-trade transparency requirements for trading venues in respect of bonds, structured finance products, emission allowances and derivatives 1. Market operators and investment firms operating a trading venue shall make public current bid and offer prices and t",
+  "right_text": "original purpose or if it believes that the waiver is being used to circumvent the requirements established in this Article. Competent authorities shall notify ESMA and other competent authorities of such withdrawal providing full reasons for their decision. 6. ESMA shall develop draft regulatory te",
+  "article_tokens": 1426,
+  "window": 512,
+  "match_starts_at_fraction": 0.674,
+  "link": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014R0600#d1e1423-84-1"
+ }
+]
