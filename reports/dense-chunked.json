@@ -1,0 +1,22 @@
+{
+  "system": "dense-chunked",
+  "queries": 564,
+  "ndcg": 0.2189,
+  "recall": 0.3531,
+  "mrr": 0.1906,
+  "provenance_complete": true,
+  "slices": {
+    "same_language": {
+      "queries": 141,
+      "ndcg": 0.3052,
+      "recall": 0.4456,
+      "mrr": 0.2876
+    },
+    "cross_lingual": {
+      "queries": 423,
+      "ndcg": 0.1902,
+      "recall": 0.3223,
+      "mrr": 0.1583
+    }
+  }
+}

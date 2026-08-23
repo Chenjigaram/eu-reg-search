@@ -1,0 +1,22 @@
+{
+  "system": "hybrid-chunked",
+  "queries": 564,
+  "ndcg": 0.2216,
+  "recall": 0.3515,
+  "mrr": 0.2004,
+  "provenance_complete": true,
+  "slices": {
+    "same_language": {
+      "queries": 141,
+      "ndcg": 0.3379,
+      "recall": 0.487,
+      "mrr": 0.3185
+    },
+    "cross_lingual": {
+      "queries": 423,
+      "ndcg": 0.1828,
+      "recall": 0.3063,
+      "mrr": 0.161
+    }
+  }
+}
