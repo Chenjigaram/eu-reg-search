@@ -1,0 +1,46 @@
+{
+  "folds": [
+    {
+      "fold": 1,
+      "train_q": 94,
+      "test_q": 47,
+      "pairs": 529,
+      "zeroshot_ndcg": 0.2688,
+      "finetuned_ndcg": 0.3324,
+      "zeroshot_recall": 0.422,
+      "finetuned_recall": 0.4681
+    },
+    {
+      "fold": 2,
+      "train_q": 94,
+      "test_q": 47,
+      "pairs": 553,
+      "zeroshot_ndcg": 0.3595,
+      "finetuned_ndcg": 0.3661,
+      "zeroshot_recall": 0.5106,
+      "finetuned_recall": 0.4645
+    },
+    {
+      "fold": 3,
+      "train_q": 94,
+      "test_q": 47,
+      "pairs": 564,
+      "zeroshot_ndcg": 0.2874,
+      "finetuned_ndcg": 0.2765,
+      "zeroshot_recall": 0.4043,
+      "finetuned_recall": 0.4362
+    }
+  ],
+  "mean_zeroshot_ndcg": 0.3052,
+  "mean_finetuned_ndcg": 0.325,
+  "mean_zeroshot_recall": 0.4456,
+  "mean_finetuned_recall": 0.4563,
+  "delta_pct": 6.5,
+  "fold_deltas": [
+    0.0636,
+    0.0066,
+    -0.0109
+  ],
+  "t_statistic": 0.88,
+  "verdict": "Mean +6.5% but folds range -3.8% to +23.7%; t=0.88 on 2 df is not significant. With 47 test questions per fold this design cannot resolve an effect of this size, so supervision is neither confirmed nor refuted. The clear contrast is with unsupervised fine-tuning, which was consistently and heavily negative (-15% overall, -48% same-language). Supervision stops the harm; whether it helps is unresolved."
+}
