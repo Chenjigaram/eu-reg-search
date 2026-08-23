@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import numpy as np
+
+from ..index.cache import VectorCache
 from ..index.chunking import chunk_refs, collapse_by_article
 from ..index.embedder import Embedder
 from ..index.store import VectorStore
@@ -18,12 +21,27 @@ def dense_search_fn(embedder: Embedder, store: VectorStore, chunked: bool = Fals
     return search
 
 
-def dense_factory(embedder: Embedder, refs: list[ArticleRef], chunked: bool = True):
-    """Encode once per language and return a factory of language-restricted retrievers."""
+def dense_factory(embedder: Embedder, refs: list[ArticleRef], chunked: bool = True,
+                  cache: VectorCache | None = None):
+    """Encode once per language and return a factory of language-restricted retrievers.
+
+    Encoding the corpus is the dominant cost of every run and its result never changes for a
+    given model, so an optional cache lets repeat experiments start from disk.
+    """
     by_language: dict[str, list[ArticleRef]] = {}
     for ref in refs:
         by_language.setdefault(ref.language, []).append(ref)
     built: dict[str, object] = {}
+
+    def encode(texts: list[str]) -> np.ndarray:
+        if cache is None:
+            return embedder.encode(texts, is_query=False)
+        known, missing = cache.split(texts)
+        if missing:
+            cache.store(missing, embedder.encode(missing, is_query=False))
+            cache.save()
+            known, _ = cache.split(texts)
+        return np.vstack([known[t] for t in texts])
 
     def factory(language: str):
         if language not in built:
@@ -32,7 +50,7 @@ def dense_factory(embedder: Embedder, refs: list[ArticleRef], chunked: bool = Tr
                 subset = chunk_refs(subset, embedder.model.tokenizer)
             store = VectorStore()
             if subset:
-                store.add(subset, embedder.encode([r.text for r in subset], is_query=False))
+                store.add(subset, encode([r.text for r in subset]))
             built[language] = dense_search_fn(embedder, store, chunked)
         return built[language]
 
