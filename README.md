@@ -32,38 +32,64 @@ scored against themselves.
 
 | System | Overall | same-language | cross-lingual |
 | --- | --- | --- | --- |
-| **Hybrid — lexical + dense** | **0.182** | 0.282 | **0.149** |
-| `multilingual-e5-small` dense | 0.154 | 0.236 | 0.127 |
-| BM25 lexical | 0.152 | **0.322** | 0.095 |
-| fine-tuned embedder | 0.146 | 0.171 | 0.138 |
+| **Hybrid — lexical + dense** | **0.222** | **0.338** | 0.183 |
+| `multilingual-e5-small` dense | 0.219 | 0.305 | **0.190** |
+| BM25 lexical | 0.152 | 0.322 | 0.095 |
 
-**The hybrid beats the best single system by 19%**, and posts the best cross-lingual score of
-anything tested.
+**The hybrid beats BM25 by 46%.** Both dense rows above are chunked; see below for why that
+matters more than anything else in this table.
 
-That result was visible in the slices long before it was built. BM25 beats the embedder by 36% on
-same-language retrieval — legal terminology is distinctive and lexical matching is strong when the
-languages agree. The embedder beats BM25 by 33% cross-lingually, which BM25 cannot do at all.
-Neither wins overall; fusing them by reciprocal rank does.
+The slices carry the argument. BM25 cannot retrieve across languages at all (0.095), and the
+embedder cannot be beaten there (0.190). Neither wins outright, and fusing them by reciprocal rank
+takes the better half of each — though not for free: fusion *costs* 0.007 cross-lingually, because
+mixing a 0.095 system into a 0.190 one dilutes it. Routing by whether the query and target language
+match would score ~0.227.
 
-Anyone reporting only the overall 0.152 versus 0.154 for the two baselines would have concluded
-"no difference" and been wrong twice.
+Anyone reporting only the overall column for the two baselines would have read 0.152 against 0.154
+as "no difference" and been wrong twice.
 
-## Fine-tuning did not help, and that is reported too
+## The retriever was reading a fraction of each article
 
-Contrastive fine-tuning of the embedder was tried twice and made retrieval slightly worse
-(0.154 to 0.146). It improved cross-lingual retrieval (0.127 to 0.138) while degrading
-same-language more (0.236 to 0.171).
+`multilingual-e5-small` has a 512-token window. **36 of the 63 cited articles (57%) exceed it.**
+MiFID II Article 4 is 4,955 tokens — 9.7x the window, so 90% of the most-cited provision in the
+corpus was invisible to the embedder. It was being scored on text it never saw.
 
-The first run was 76% cross-lingual alignment pairs, teaching *"these two texts are the same
-provision"* rather than *"this question is answered by this provision"*. So the mix was inverted:
-alignment pairs capped, formulaic templates replaced with Inverse Cloze Task pairs drawing a real
-sentence from the article as the query. Question-like pairs went from 23% to 74%, epochs doubled.
+Indexing 400-token passages with 80 tokens of overlap and scoring each article by its best passage:
 
-**Overall nDCG moved 0.147 to 0.146.** The obvious explanation was tested and rejected.
+| | before | after |
+| --- | --- | --- |
+| dense, overall | 0.154 | **0.219** (+42%) |
+| dense, cross-lingual | 0.127 | **0.190** (+50%) |
+| hybrid, overall | 0.182 | **0.222** (+22%) |
 
-The remaining likely cause is corpus size: 690 trainable articles is too little for contrastive
-adaptation to beat general-purpose pretraining. Domain fine-tuning is not free, and below some
-corpus size it is negative — which is worth knowing before spending GPU budget on it.
+No new parameters, no training. The embedder had been losing same-language retrieval to BM25
+because BM25 reads the whole article and it did not; chunked, it takes that slice back (0.338
+against 0.322).
+
+## Fine-tuning did not help, and the reason was not the one I gave
+
+Contrastive fine-tuning was tried twice and made retrieval worse both times (0.154 to 0.146). The
+first run was 76% cross-lingual alignment pairs, teaching *"these two texts are the same
+provision"* rather than *"this question is answered by this provision"*. Inverting the mix — capping
+alignment pairs, replacing formulaic templates with Inverse Cloze Task pairs — moved overall nDCG
+from 0.147 to 0.146. The obvious explanation was tested and rejected.
+
+I then attributed the failure to corpus size: 690 trainable articles being too few for contrastive
+adaptation to beat general-purpose pretraining. That was a guess, and the measurement contradicts
+it.
+
+**Training ran at `max_seq_length = 192`.** 75% of articles are longer than that, and the median
+article is 386 tokens — so the model was trained on roughly half of a typical provision and then
+asked at inference to retrieve a 512-token representation of it. The positives it learned and the
+passages it was scored against were different text.
+
+Both ends now match: pairs are built from the same 400-token chunks the index serves, and the
+training window equals the inference encoder's. The re-run is pending; whatever it returns will be
+reported here, including if it fails again.
+
+The honest state is that the corpus-size claim was never measured, and the truncation was. Domain
+fine-tuning may still turn out not to pay for itself at this scale — but that has not been shown
+yet, and the earlier negative result cannot carry the weight I put on it.
 
 ## What makes the evaluation trustworthy
 
