@@ -36,17 +36,17 @@ scored against themselves.
 | `multilingual-e5-small` dense | 0.219 | 0.305 | **0.190** |
 | BM25 lexical | 0.152 | 0.322 | 0.095 |
 
-**The hybrid beats BM25 by 46%.** Both dense rows above are chunked; see below for why that
-matters more than anything else in this table.
+**Both dense systems beat BM25 by 5.5 standard errors.** The hybrid's 0.222 against dense 0.219 is
+0.003 — about 0.2 standard errors on 564 queries, which is not a win and is not claimed as one.
 
-The slices carry the argument. BM25 cannot retrieve across languages at all (0.095), and the
-embedder cannot be beaten there (0.190). Neither wins outright, and fusing them by reciprocal rank
-takes the better half of each — though not for free: fusion *costs* 0.007 cross-lingually, because
-mixing a 0.095 system into a 0.190 one dilutes it. Routing by whether the query and target language
-match would score ~0.227.
+That is itself the finding. Before chunking, fusing lexical and dense retrieval bought a real 19%
+over the best single system, and it was the headline result of this repo. It no longer holds: once
+the embedder could read whole articles it matched the hybrid alone, and fusion now *costs* 0.007
+cross-lingually, because mixing a 0.095 system into a 0.190 one dilutes it. **The hybrid had been
+compensating for a truncation bug.**
 
-Anyone reporting only the overall column for the two baselines would have read 0.152 against 0.154
-as "no difference" and been wrong twice.
+Routing by whether the query and target language match — hybrid when they agree, dense when they do
+not — scores ~0.227 and is the honest design.
 
 ## The retriever was reading a fraction of each article
 

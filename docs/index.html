@@ -52,7 +52,7 @@
     <div class="parallel">
 
       <article class="provision">
-        <div class="provision-head"><span class="lang">English</span><span class="latency">70 ms</span></div>
+        <div class="provision-head"><span class="lang">English</span><span class="latency">69 ms</span></div>
         <span class="verdict hit">Correct</span>
         <div class="article-no">Article 20</div>
         <div class="instrument">MiFID II · Directive 2014/65/EU</div>
@@ -64,7 +64,7 @@
       </article>
 
       <article class="provision">
-        <div class="provision-head"><span class="lang">Nederlands</span><span class="latency">45 ms</span></div>
+        <div class="provision-head"><span class="lang">Nederlands</span><span class="latency">68 ms</span></div>
         <span class="verdict hit">Correct</span>
         <div class="article-no">Artikel 20</div>
         <div class="instrument">MiFID II · Richtlijn 2014/65/EU</div>
@@ -76,7 +76,7 @@
       </article>
 
       <article class="provision">
-        <div class="provision-head"><span class="lang">Deutsch</span><span class="latency">42 ms</span></div>
+        <div class="provision-head"><span class="lang">Deutsch</span><span class="latency">100 ms</span></div>
         <span class="verdict hit">Correct</span>
         <div class="article-no">Artikel 20</div>
         <div class="instrument">MiFID II · Richtlinie 2014/65/EU</div>
@@ -88,7 +88,7 @@
       </article>
 
       <article class="provision">
-        <div class="provision-head"><span class="lang">Français</span><span class="latency">41 ms</span></div>
+        <div class="provision-head"><span class="lang">Français</span><span class="latency">45 ms</span></div>
         <span class="verdict miss">Wrong article</span>
         <div class="article-no">Article 18</div>
         <div class="instrument">MiFID II · Directive 2014/65/UE</div>
@@ -114,7 +114,7 @@
   <div class="shell">
     <div class="stat"><div class="n">1,195</div><div class="k">articles indexed</div></div>
     <div class="stat"><div class="n">4</div><div class="k">languages, any direction</div></div>
-    <div class="stat"><div class="n">45 ms</div><div class="k">median query</div></div>
+    <div class="stat"><div class="n">69 ms</div><div class="k">median query</div></div>
     <div class="stat"><div class="n">564</div><div class="k">evaluation queries</div></div>
   </div>
 </div>
@@ -122,7 +122,7 @@
 <section class="band" id="results">
   <div class="shell">
     <span class="section-no">Results</span>
-    <h2>Neither search method wins. Fusing them does.</h2>
+    <h2>Fusion was covering for a bug.</h2>
     <p>
       564 queries built from 141 ESMA question-to-article pairs, scored by nDCG@10 — the labels come
       from the regulator's own citations, not from generated queries scored against themselves.
@@ -134,10 +134,9 @@
           <tr><th>System</th><th>Overall</th><th>Same-language</th><th>Cross-lingual</th></tr>
         </thead>
         <tbody>
-          <tr class="win"><td>Hybrid — lexical + dense</td><td class="num">0.182</td><td class="num">0.282</td><td class="num">0.149</td></tr>
-          <tr><td><code>multilingual-e5-small</code> dense</td><td class="num">0.154</td><td class="num">0.236</td><td class="num">0.127</td></tr>
-          <tr><td>BM25 lexical</td><td class="num">0.152</td><td class="num best">0.322</td><td class="num">0.095</td></tr>
-          <tr><td>Fine-tuned embedder</td><td class="num">0.146</td><td class="num">0.171</td><td class="num">0.138</td></tr>
+          <tr class="win"><td>Hybrid — lexical + dense</td><td class="num">0.222</td><td class="num best">0.338</td><td class="num">0.183</td></tr>
+          <tr><td><code>multilingual-e5-small</code> dense</td><td class="num">0.219</td><td class="num">0.305</td><td class="num best">0.190</td></tr>
+          <tr><td>BM25 lexical</td><td class="num">0.152</td><td class="num">0.322</td><td class="num">0.095</td></tr>
         </tbody>
       </table>
     </div>
@@ -145,32 +144,32 @@
     <div class="panels">
       <div class="panel">
         <h3>Same-language retrieval</h3>
-        <div class="bar-row top"><span class="name">BM25</span><span class="track"><span class="fill" style="width:92.0%"></span></span><span class="v">0.322</span></div>
-        <div class="bar-row"><span class="name">Hybrid</span><span class="track"><span class="fill" style="width:80.6%"></span></span><span class="v">0.282</span></div>
-        <div class="bar-row"><span class="name">Dense</span><span class="track"><span class="fill" style="width:67.4%"></span></span><span class="v">0.236</span></div>
-        <div class="bar-row"><span class="name">Fine-tuned</span><span class="track"><span class="fill" style="width:48.9%"></span></span><span class="v">0.171</span></div>
+        <div class="bar-row top"><span class="name">Hybrid</span><span class="track"><span class="fill" style="width:96.6%"></span></span><span class="v">0.338</span></div>
+        <div class="bar-row"><span class="name">BM25</span><span class="track"><span class="fill" style="width:92.0%"></span></span><span class="v">0.322</span></div>
+        <div class="bar-row"><span class="name">Dense</span><span class="track"><span class="fill" style="width:87.1%"></span></span><span class="v">0.305</span></div>
         <p class="axis">0 ——— 0.35 nDCG@10</p>
       </div>
       <div class="panel">
         <h3>Cross-lingual retrieval</h3>
-        <div class="bar-row top"><span class="name">Hybrid</span><span class="track"><span class="fill" style="width:42.6%"></span></span><span class="v">0.149</span></div>
-        <div class="bar-row"><span class="name">Fine-tuned</span><span class="track"><span class="fill" style="width:39.4%"></span></span><span class="v">0.138</span></div>
-        <div class="bar-row"><span class="name">Dense</span><span class="track"><span class="fill" style="width:36.3%"></span></span><span class="v">0.127</span></div>
+        <div class="bar-row top"><span class="name">Dense</span><span class="track"><span class="fill" style="width:54.3%"></span></span><span class="v">0.190</span></div>
+        <div class="bar-row"><span class="name">Hybrid</span><span class="track"><span class="fill" style="width:52.3%"></span></span><span class="v">0.183</span></div>
         <div class="bar-row"><span class="name">BM25</span><span class="track"><span class="fill" style="width:27.1%"></span></span><span class="v">0.095</span></div>
         <p class="axis">0 ——— 0.35 nDCG@10</p>
       </div>
     </div>
 
     <p class="pull">
-      Overall, BM25 scores 0.152 and the embedder 0.154. Read only that column and the honest
-      conclusion is “no difference.” It is wrong twice.
+      Hybrid 0.222 and dense 0.219 differ by 0.003 — about 0.2 standard errors on 564 queries. That is
+      not a win. Both clear BM25 by 5.5 standard errors, which is.
     </p>
 
     <p style="margin-top:26px">
-      BM25 beats the embedder by 36% when the question and the law share a language — legal terminology
-      is distinctive, and exact terms match. The embedder beats BM25 by 33% across languages, which BM25
-      cannot do at all. Reciprocal rank fusion takes both, and lands 19% above the best single system
-      with the best cross-lingual score of anything tested.
+      Before chunking, fusing lexical and dense retrieval bought a real 19% over the best single system,
+      and that was the headline result here. It no longer holds. Once the embedder could read whole
+      articles it matched the hybrid on its own, and fusion now <em>costs</em> 0.007 cross-lingually,
+      because mixing a 0.095 system into a 0.190 one dilutes it. The hybrid had been compensating for
+      truncation. Routing by whether the query and target language match — hybrid when they agree, dense
+      when they do not — scores about 0.227, and is the honest design.
     </p>
   </div>
 </section>
@@ -185,15 +184,17 @@
     </p>
 
     <div class="funnel">
-      <div class="rung"><div class="pct">17%</div><div class="lbl">the cited article is the top result</div></div>
-      <div class="rung"><div class="pct">40%</div><div class="lbl">it is somewhere in the top five</div></div>
-      <div class="rung wide"><div class="pct">45%</div><div class="lbl">it is somewhere in the top ten</div></div>
+      <div class="rung"><div class="pct">18%</div><div class="lbl">the cited article is the top result</div></div>
+      <div class="rung"><div class="pct">50%</div><div class="lbl">it is somewhere in the top five</div></div>
+      <div class="rung wide"><div class="pct">57%</div><div class="lbl">it is somewhere in the top ten</div></div>
     </div>
 
     <p style="margin-top:30px">
       This is a shortlisting tool, not an oracle. The five instruments run to 300 articles per language,
-      335 KB of statute for MiFID II alone; reading ten cited provisions takes a minute, and just under
-      half the time the right one is among them. Every candidate arrives with the article number, the CELEX id, the version indexed and a
+      335 KB of statute for MiFID II alone; reading ten cited provisions takes a minute, and well over
+      half the time the right one is among them. Note where chunking helped: rank-1 barely moved, but
+      top-ten recall went from 45% to 57% — it pulls the right article <em>into</em> the shortlist rather
+      than to the top of it. Every candidate arrives with the article number, the CELEX id, the version indexed and a
       deep link, so the reader confirms or discards it without leaving the page.
     </p>
   </div>
@@ -201,25 +202,61 @@
 
 <section class="band">
   <div class="shell">
-    <span class="section-no">Negative result</span>
-    <h2>Fine-tuning did not help, and that is reported too.</h2>
+    <span class="section-no">The bug that was costing the most</span>
+    <h2>The retriever was reading a fraction of each article.</h2>
     <p>
-      Contrastive fine-tuning of the embedder was tried twice and made retrieval slightly worse overall,
-      0.154 to 0.146. It improved cross-lingual retrieval, 0.127 to 0.138, while degrading same-language
-      retrieval further, 0.236 to 0.171.
+      <code>multilingual-e5-small</code> has a 512-token window, and the corpus does not fit in it.
+      <strong>36 of the 63 cited articles — 57% — exceed it.</strong> MiFID II Article 4 is 4,955 tokens,
+      9.7&times; the window, so 90% of the most-cited provision in the corpus was invisible. The embedder
+      was being scored on text it never saw.
     </p>
     <p>
-      The first run was 76% cross-lingual alignment pairs, teaching <em>“these two texts are the same
-      provision”</em> rather than <em>“this question is answered by this provision.”</em> So the mix was
-      inverted: alignment pairs capped, formulaic templates replaced with Inverse Cloze Task pairs that
-      draw a real sentence from the article as the query. Question-like pairs went from 23% to 74%, and
-      epochs doubled.
+      Indexing 400-token passages with 80 tokens of overlap, and scoring each article by its best
+      passage:
     </p>
-    <p class="pull">Overall nDCG moved from 0.147 to 0.146. The obvious explanation was tested and rejected.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Measure</th><th>Before</th><th>After</th></tr></thead>
+        <tbody>
+          <tr><td>Dense, overall</td><td class="num">0.154</td><td class="num best">0.219 (+42%)</td></tr>
+          <tr><td>Dense, cross-lingual</td><td class="num">0.127</td><td class="num best">0.190 (+50%)</td></tr>
+          <tr><td>Hybrid, overall</td><td class="num">0.182</td><td class="num best">0.222 (+22%)</td></tr>
+          <tr><td>Top-ten recall, same-language</td><td class="num">45%</td><td class="num best">57%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="pull">
+      No new parameters. No training. The embedder had been losing same-language retrieval to BM25
+      because BM25 reads the whole article and it did not.
+    </p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="shell">
+    <span class="section-no">Negative result, and a correction</span>
+    <h2>Fine-tuning did not help — and the reason I gave was wrong.</h2>
+    <p>
+      Contrastive fine-tuning was tried twice and made retrieval worse both times, 0.154 to 0.146.
+      Inverting the pair mix — capping cross-lingual alignment pairs, replacing formulaic templates with
+      Inverse Cloze Task pairs — moved overall nDCG from 0.147 to 0.146. The obvious explanation was
+      tested and rejected.
+    </p>
+    <p>
+      I then attributed the failure to corpus size: 690 trainable articles being too few for contrastive
+      adaptation to beat general-purpose pretraining. That was a guess, and the measurement contradicts it.
+    </p>
+    <p class="pull">
+      Training ran at a 192-token window. 75% of articles are longer, and the median is 386 tokens — so
+      the model learned half a provision, then was asked to retrieve a 512-token representation of it.
+    </p>
     <p style="margin-top:26px">
-      The remaining likely cause is corpus size. 690 trainable articles is too little for contrastive
-      adaptation to beat general-purpose pretraining. Domain fine-tuning is not free, and below some
-      corpus size it is negative — which is worth knowing before spending the GPU budget.
+      The positives it trained on and the passages it was scored against were different text. Both ends
+      now match: pairs are built from the same 400-token chunks the index serves, and the training window
+      equals the inference encoder's. That re-run is pending, and whatever it returns will be reported
+      here — including if it fails again. The corpus-size claim was never measured; the truncation was.
     </p>
   </div>
 </section>
