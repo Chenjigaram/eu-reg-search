@@ -166,6 +166,23 @@ is the sanctioned machine-to-machine route.
 Note that Kaggle assigns a P100 (sm_60) which the installed PyTorch cannot execute (sm_70+ only),
 so the kernel probes real GPU capability with a live matmul and falls back to CPU.
 
+## Reproducing this
+
+Everything the results rest on is public.
+
+| | |
+| --- | --- |
+| Corpus and relevance judgements | [kaggle.com/datasets/chenjigaram/eu-reg-search-corpus](https://www.kaggle.com/datasets/chenjigaram/eu-reg-search-corpus) |
+| Reranking on a T4 | [kaggle.com/code/chenjigaram/eu-reg-search-rerank](https://www.kaggle.com/code/chenjigaram/eu-reg-search-rerank) |
+| Fine-tuning notebook | [kaggle.com/code/chenjigaram/eu-reg-search-finetune](https://www.kaggle.com/code/chenjigaram/eu-reg-search-finetune) |
+| Writeup | [chenjigaram.github.io/eu-reg-search](https://chenjigaram.github.io/eu-reg-search/) |
+
+The corpus is EUR-Lex text, reusable under Commission Decision 2011/833/EU with consolidated texts
+under CC BY 4.0, so it can be redistributed as a dataset. Note that Kaggle's free tier assigns a
+Tesla P100, whose `sm_60` architecture the current PyTorch build does not ship kernels for; the
+accelerator has to be set to **GPU T4 x2** in the notebook UI, and that setting cannot be pushed
+through the API.
+
 ## Prior work
 
 **LEMUR** (arXiv:2602.09570) fine-tunes multilingual law embedding models for retrieval.
