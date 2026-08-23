@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>eu-reg-search — cross-lingual retrieval over EU financial regulation</title>
-<meta name="description" content="Ask a question in English, get the exact provision of EU financial regulation that answers it — in Dutch, German or French — with a EUR-Lex link that proves it.">
+<title>eu-reg-search — the retriever was reading a fraction of each article</title>
+<meta name="description" content="A search system over EU financial regulation scored badly. I blamed the corpus size. The real cause was a 512-token window and articles that were ten times longer.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<meta property="og:type" content="website">
-<meta property="og:title" content="eu-reg-search — one question, the same provision, in four languages">
-<meta property="og:description" content="Cross-lingual retrieval over EU financial regulation. Verbatim EUR-Lex text with a deep link that proves it. Evaluated against ESMA's own citations.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The retriever was reading a fraction of each article">
+<meta property="og:description" content="A search system over EU financial regulation scored badly. I blamed the corpus size. The real cause was a 512-token window.">
 <meta property="og:url" content="https://chenjigaram.github.io/eu-reg-search/">
 <meta property="og:image" content="https://chenjigaram.github.io/eu-reg-search/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -23,309 +23,287 @@
   <div class="shell">
     <span class="wordmark">eu-reg-search</span>
     <nav>
-      <span class="sections">
-        <a href="#results">Results</a>
-        <a href="#accuracy">Accuracy</a>
-        <a href="#evaluation">Evaluation</a>
-      </span>
       <a href="https://github.com/Chenjigaram/eu-reg-search">Repository</a>
     </nav>
   </div>
 </header>
 
-<section class="hero">
-  <div class="shell">
-    <p class="eyebrow">Cross-lingual retrieval · EU financial regulation</p>
-    <h1>One question. The same provision, in <em>four languages</em>.</h1>
-    <p class="lede">
-      EU law is enacted in 24 equally authentic language versions. Ask in English and this returns the
-      provision that answers you — in Dutch, German or French — as verbatim EUR-Lex text with a link
-      anchored to the article. Nothing is generated, so there is nothing to hallucinate.
-    </p>
+<article class="post">
+  <div class="post-shell">
 
-    <div class="query">
-      <span class="query-tag">Question&nbsp;→</span>
-      <p>When an investment firm operates an OTF, at which level should the best execution policy be
-      set? At the level of the investment firm or at the level of the OTF or both?</p>
+    <div class="post-header">
+      <h1>The retriever was reading a fraction of each article</h1>
+      <p class="byline">22 August 2026 · <a href="https://github.com/Chenjigaram/eu-reg-search">Chenjigaram/eu-reg-search</a></p>
     </div>
 
-    <div class="parallel">
-
-      <article class="provision">
-        <div class="provision-head"><span class="lang">English</span><span class="latency">69 ms</span></div>
-        <span class="verdict hit">Correct</span>
-        <div class="article-no">Article 20</div>
-        <div class="instrument">MiFID II · Directive 2014/65/EU</div>
-        <p class="passage">Specific requirements for OTFs. 1. Member States shall require that an investment
-        firm and a market operator operating an OTF establishes arrangements preventing the execution of
-        client orders in an OTF against the proprietary capital…</p>
-        <div class="cite">CELEX 32014L0065 · consolidated<br>retrieved 2026-08-21<br>
-        <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e3901-349-1">Open on EUR-Lex ↗</a></div>
-      </article>
-
-      <article class="provision">
-        <div class="provision-head"><span class="lang">Nederlands</span><span class="latency">68 ms</span></div>
-        <span class="verdict hit">Correct</span>
-        <div class="article-no">Artikel 20</div>
-        <div class="instrument">MiFID II · Richtlijn 2014/65/EU</div>
-        <p class="passage">Specifieke eisen voor OTF’s. 1. De lidstaten schrijven voor dat een
-        beleggingsonderneming en een marktexploitant die een OTF exploiteert, regelingen treft om te
-        voorkomen dat orders van cliënten via een OTF worden uitgevoerd…</p>
-        <div class="cite">CELEX 32014L0065 · consolidated<br>retrieved 2026-08-21<br>
-        <a href="https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32014L0065#d1e3921-349-1">Open op EUR-Lex ↗</a></div>
-      </article>
-
-      <article class="provision">
-        <div class="provision-head"><span class="lang">Deutsch</span><span class="latency">100 ms</span></div>
-        <span class="verdict hit">Correct</span>
-        <div class="article-no">Artikel 20</div>
-        <div class="instrument">MiFID II · Richtlinie 2014/65/EU</div>
-        <p class="passage">Besondere Anforderungen für OTF. (1) Die Mitgliedstaaten schreiben vor, dass
-        Wertpapierfirmen und Marktbetreiber, die ein OTF betreiben, Vorkehrungen treffen, durch die die
-        Ausführung von Kundenaufträgen in einem OTF…</p>
-        <div class="cite">CELEX 32014L0065 · consolidated<br>retrieved 2026-08-21<br>
-        <a href="https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0065#d1e3935-349-1">Auf EUR-Lex öffnen ↗</a></div>
-      </article>
-
-      <article class="provision">
-        <div class="provision-head"><span class="lang">Français</span><span class="latency">45 ms</span></div>
-        <span class="verdict miss">Wrong article</span>
-        <div class="article-no">Article 18</div>
-        <div class="instrument">MiFID II · Directive 2014/65/UE</div>
-        <p class="passage">Processus de négociation et dénouement des transactions sur les MTF et les OTF.
-        1. Outre les obligations organisationnelles prévues à l’article 16, les États membres exigent des
-        entreprises d’investissement…</p>
-        <div class="cite">CELEX 32014L0065 · consolidated<br>retrieved 2026-08-21<br>
-        <a href="https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32014L0065#d1e4162-349-1">Ouvrir sur EUR-Lex ↗</a></div>
-      </article>
-
-    </div>
-
-    <p class="parallel-note">
-      Three languages return Article 20. French returns Article 18 — the neighbouring provision, on
-      trading on MTFs and OTFs rather than the specific OTF requirements. That miss is the argument for
-      the citation: the reader clicks through and catches it in seconds. A system that answered in prose
-      would have stated it as fact.
-    </p>
-  </div>
-</section>
-
-<div class="strip">
-  <div class="shell">
-    <div class="stat"><div class="n">1,195</div><div class="k">articles indexed</div></div>
-    <div class="stat"><div class="n">4</div><div class="k">languages, any direction</div></div>
-    <div class="stat"><div class="n">69 ms</div><div class="k">median query</div></div>
-    <div class="stat"><div class="n">564</div><div class="k">evaluation queries</div></div>
-  </div>
-</div>
-
-<section class="band" id="results">
-  <div class="shell">
-    <span class="section-no">Results</span>
-    <h2>Fusion was covering for a bug.</h2>
     <p>
-      564 queries built from 141 ESMA question-to-article pairs, scored by nDCG@10 — the labels come
-      from the regulator's own citations, not from generated queries scored against themselves.
+      I have been building a search system over EU financial regulation. You ask a question in English
+      and it gives you back the provision that answers it, in Dutch, German or French, with a link to
+      that exact article on EUR-Lex. There is no generation step anywhere in it. The text you get is
+      copied from the source, so there is nothing for a model to make up.
+    </p>
+
+    <figure>
+      <div class="parallel">
+        <div class="provision">
+          <div class="provision-head"><span class="lang">English</span><span class="latency">69 ms</span></div>
+          <span class="verdict hit">Correct</span>
+          <div class="article-no">Article 20</div>
+          <div class="instrument">MiFID II</div>
+          <p class="passage">Specific requirements for OTFs. 1. Member States shall require that an
+          investment firm and a market operator operating an OTF establishes arrangements preventing
+          the execution of client orders…</p>
+          <div class="cite"><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32014L0065#d1e3901-349-1">EUR-Lex ↗</a></div>
+        </div>
+        <div class="provision">
+          <div class="provision-head"><span class="lang">Nederlands</span><span class="latency">68 ms</span></div>
+          <span class="verdict hit">Correct</span>
+          <div class="article-no">Artikel 20</div>
+          <div class="instrument">MiFID II</div>
+          <p class="passage">Specifieke eisen voor OTF’s. 1. De lidstaten schrijven voor dat een
+          beleggingsonderneming en een marktexploitant die een OTF exploiteert, regelingen treft…</p>
+          <div class="cite"><a href="https://eur-lex.europa.eu/legal-content/NL/TXT/HTML/?uri=CELEX:32014L0065#d1e3921-349-1">EUR-Lex ↗</a></div>
+        </div>
+        <div class="provision">
+          <div class="provision-head"><span class="lang">Deutsch</span><span class="latency">100 ms</span></div>
+          <span class="verdict hit">Correct</span>
+          <div class="article-no">Artikel 20</div>
+          <div class="instrument">MiFID II</div>
+          <p class="passage">Besondere Anforderungen für OTF. (1) Die Mitgliedstaaten schreiben vor,
+          dass Wertpapierfirmen und Marktbetreiber, die ein OTF betreiben, Vorkehrungen treffen…</p>
+          <div class="cite"><a href="https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0065#d1e3935-349-1">EUR-Lex ↗</a></div>
+        </div>
+        <div class="provision">
+          <div class="provision-head"><span class="lang">Français</span><span class="latency">45 ms</span></div>
+          <span class="verdict miss">Wrong article</span>
+          <div class="article-no">Article 18</div>
+          <div class="instrument">MiFID II</div>
+          <p class="passage">Processus de négociation et dénouement des transactions sur les MTF et les
+          OTF. 1. Outre les obligations organisationnelles prévues à l’article 16…</p>
+          <div class="cite"><a href="https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32014L0065#d1e4162-349-1">EUR-Lex ↗</a></div>
+        </div>
+      </div>
+      <figcaption>
+        One question about best execution on an OTF, run against each language index. Three of them
+        return Article 20. French returns Article 18, which is the article next door. I have left the
+        miss in because it is the ordinary case, and because the citation is what lets you catch it.
+      </figcaption>
+    </figure>
+
+    <p>
+      The evaluation set comes from ESMA. Their Q&amp;A documents state a question, answer it, and cite
+      the articles the answer relies on. That gives 141 question-to-article pairs I did not write
+      myself, which matters, because the alternative is generating queries from the same articles you
+      are then scoring against.
+    </p>
+
+    <h2>The numbers were bad</h2>
+
+    <p>
+      The first full run scored 0.182 nDCG@10 for the best system. Splitting it by whether the question
+      and the law were in the same language:
     </p>
 
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr><th>System</th><th>Overall</th><th>Same-language</th><th>Cross-lingual</th></tr>
-        </thead>
+        <thead><tr><th>System</th><th>Overall</th><th>Same language</th><th>Cross-lingual</th></tr></thead>
         <tbody>
-          <tr class="win"><td>Hybrid — lexical + dense</td><td class="num">0.222</td><td class="num best">0.338</td><td class="num">0.183</td></tr>
-          <tr><td><code>multilingual-e5-small</code> dense</td><td class="num">0.219</td><td class="num">0.305</td><td class="num best">0.190</td></tr>
-          <tr><td>BM25 lexical</td><td class="num">0.152</td><td class="num">0.322</td><td class="num">0.095</td></tr>
+          <tr><td>Hybrid (BM25 + dense)</td><td class="num">0.182</td><td class="num">0.282</td><td class="num">0.149</td></tr>
+          <tr><td>Dense only</td><td class="num">0.154</td><td class="num">0.236</td><td class="num">0.127</td></tr>
+          <tr><td>BM25 only</td><td class="num">0.152</td><td class="num">0.322</td><td class="num">0.095</td></tr>
+          <tr><td>Fine-tuned embedder</td><td class="num">0.146</td><td class="num">0.171</td><td class="num">0.138</td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="panels">
-      <div class="panel">
-        <h3>Same-language retrieval</h3>
-        <div class="bar-row top"><span class="name">Hybrid</span><span class="track"><span class="fill" style="width:96.6%"></span></span><span class="v">0.338</span></div>
-        <div class="bar-row"><span class="name">BM25</span><span class="track"><span class="fill" style="width:92.0%"></span></span><span class="v">0.322</span></div>
-        <div class="bar-row"><span class="name">Dense</span><span class="track"><span class="fill" style="width:87.1%"></span></span><span class="v">0.305</span></div>
-        <p class="axis">0 ——— 0.35 nDCG@10</p>
-      </div>
-      <div class="panel">
-        <h3>Cross-lingual retrieval</h3>
-        <div class="bar-row top"><span class="name">Dense</span><span class="track"><span class="fill" style="width:54.3%"></span></span><span class="v">0.190</span></div>
-        <div class="bar-row"><span class="name">Hybrid</span><span class="track"><span class="fill" style="width:52.3%"></span></span><span class="v">0.183</span></div>
-        <div class="bar-row"><span class="name">BM25</span><span class="track"><span class="fill" style="width:27.1%"></span></span><span class="v">0.095</span></div>
-        <p class="axis">0 ——— 0.35 nDCG@10</p>
-      </div>
-    </div>
-
-    <p class="pull">
-      Hybrid 0.222 and dense 0.219 differ by 0.003 — about 0.2 standard errors on 564 queries. That is
-      not a win. Both clear BM25 by 5.5 standard errors, which is.
-    </p>
-
-    <p style="margin-top:26px">
-      Before chunking, fusing lexical and dense retrieval bought a real 19% over the best single system,
-      and that was the headline result here. It no longer holds. Once the embedder could read whole
-      articles it matched the hybrid on its own, and fusion now <em>costs</em> 0.007 cross-lingually,
-      because mixing a 0.095 system into a 0.190 one dilutes it. The hybrid had been compensating for
-      truncation. Routing by whether the query and target language match — hybrid when they agree, dense
-      when they do not — scores about 0.227, and is the honest design.
-    </p>
-  </div>
-</section>
-
-<section class="band" id="accuracy">
-  <div class="shell">
-    <span class="section-no">How often is it actually right</span>
-    <h2>It narrows 1,195 articles to ten, and is right about half the time.</h2>
     <p>
-      Measured over the 141 same-language questions. These are the numbers a compliance team would
-      plan around, so they are stated plainly rather than folded into an average.
+      Fusing BM25 with the embedder was the best thing in the table, so that became the headline. BM25
+      was clearly better when the languages matched, the embedder was better across languages, and
+      combining them with reciprocal rank fusion beat either one alone by 19%. I had a tidy explanation
+      for it too: legal terminology is distinctive, so exact matching works well when you can use it.
     </p>
 
-    <div class="funnel">
-      <div class="rung"><div class="pct">18%</div><div class="lbl">the cited article is the top result</div></div>
-      <div class="rung"><div class="pct">50%</div><div class="lbl">it is somewhere in the top five</div></div>
-      <div class="rung wide"><div class="pct">57%</div><div class="lbl">it is somewhere in the top ten</div></div>
-    </div>
-
-    <p style="margin-top:30px">
-      This is a shortlisting tool, not an oracle. The five instruments run to 300 articles per language,
-      335 KB of statute for MiFID II alone; reading ten cited provisions takes a minute, and well over
-      half the time the right one is among them. Note where chunking helped: rank-1 barely moved, but
-      top-ten recall went from 45% to 57% — it pulls the right article <em>into</em> the shortlist rather
-      than to the top of it. Every candidate arrives with the article number, the CELEX id, the version indexed and a
-      deep link, so the reader confirms or discards it without leaving the page.
-    </p>
-  </div>
-</section>
-
-<section class="band">
-  <div class="shell">
-    <span class="section-no">The bug that was costing the most</span>
-    <h2>The retriever was reading a fraction of each article.</h2>
     <p>
-      <code>multilingual-e5-small</code> has a 512-token window, and the corpus does not fit in it.
-      <strong>36 of the 63 cited articles — 57% — exceed it.</strong> MiFID II Article 4 is 4,955 tokens,
-      9.7&times; the window, so 90% of the most-cited provision in the corpus was invisible. The embedder
-      was being scored on text it never saw.
+      The fine-tuning was the part that bothered me. I tried it twice. The first attempt was mostly
+      cross-lingual alignment pairs, which teaches the model that two texts are the same provision
+      rather than that a question is answered by one. So I rebuilt the mix, capped the alignment pairs,
+      and swapped the template questions for Inverse Cloze Task pairs. Question-like pairs went from
+      23% to 74%. Overall nDCG went from 0.147 to 0.146.
     </p>
+
     <p>
-      Indexing 400-token passages with 80 tokens of overlap, and scoring each article by its best
-      passage:
+      I put that down to the corpus. There are 690 trainable articles, which is not much, and the
+      standard story is that below some size you cannot beat general-purpose pretraining. I wrote it
+      up that way and moved on to other things.
     </p>
+
+    <h2>I never checked how long the articles were</h2>
+
+    <p>
+      The model is <code>multilingual-e5-small</code>. Its window is 512 tokens. Somewhere between
+      "0.182 is bad" and "the corpus is too small" I skipped the step where you look at the input.
+    </p>
+
+<pre><span class="c"># articles cited by the evaluation set, English</span>
+tok = Embedder().model.tokenizer
+lens = [len(tok.encode(r.text)) for r in gold_articles]
+
+GOLD articles (en): 63
+  exceeding 512 tokens (truncated): 36 = 57%
+   4955 tokens (9.7x window)  32014L0065 Art 4
+   2544 tokens (5.0x window)  32014L0065 Art 24
+   2464 tokens (4.8x window)  32014L0065 Art 57
+   2023 tokens (4.0x window)  32014L0065 Art 25</pre>
+
+    <p>
+      More than half the articles I was being scored on did not fit. MiFID II Article 4 is the
+      definitions article and the most cited thing in the corpus. It is 4,955 tokens. The embedder was
+      reading the first tenth of it and never saw the rest.
+    </p>
+
+    <p>
+      This also explained the thing I had a tidy story for. BM25 does not have a window. It reads the
+      whole article. So when I said BM25 wins on same-language retrieval because legal terms are
+      distinctive, what was actually happening is that one system could see the text and the other
+      could not.
+    </p>
+
+    <h2>Chunking</h2>
+
+    <p>
+      The fix is not clever. Split each article into 400-token passages with 80 tokens of overlap,
+      index the passages, and score an article by its best-matching passage.
+    </p>
+
+<pre>def chunk_text(text, tokenizer, size=400, overlap=80):
+    ids = tokenizer.encode(text, add_special_tokens=False)
+    if len(ids) &lt;= size:
+        return [text]
+    step = size - overlap
+    min_tail = max(1, min(40, size // 4))
+    pieces = []
+    for start in range(0, len(ids), step):
+        window = ids[start:start + size]
+        if len(window) &lt; min_tail and pieces:
+            break
+        pieces.append(tokenizer.decode(window))
+        if start + size &gt;= len(ids):
+            break
+    return pieces</pre>
+
+    <p class="aside">
+      The <code>min_tail</code> guard was originally a flat 40 tokens, which quietly dropped the last
+      chunk of every article when I tested with small window sizes. A test asserting that every token
+      survives chunking caught it. Worth writing that test.
+    </p>
+
+    <p>Rerunning everything:</p>
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Measure</th><th>Before</th><th>After</th></tr></thead>
+        <thead><tr><th>System</th><th>Overall</th><th>Same language</th><th>Cross-lingual</th></tr></thead>
         <tbody>
-          <tr><td>Dense, overall</td><td class="num">0.154</td><td class="num best">0.219 (+42%)</td></tr>
-          <tr><td>Dense, cross-lingual</td><td class="num">0.127</td><td class="num best">0.190 (+50%)</td></tr>
-          <tr><td>Hybrid, overall</td><td class="num">0.182</td><td class="num best">0.222 (+22%)</td></tr>
-          <tr><td>Top-ten recall, same-language</td><td class="num">45%</td><td class="num best">57%</td></tr>
+          <tr class="win"><td>Hybrid, chunked</td><td class="num">0.222</td><td class="num">0.338</td><td class="num">0.183</td></tr>
+          <tr><td>Dense, chunked</td><td class="num">0.219</td><td class="num">0.305</td><td class="num">0.190</td></tr>
+          <tr><td>BM25 (unchanged)</td><td class="num">0.152</td><td class="num">0.322</td><td class="num">0.095</td></tr>
         </tbody>
       </table>
     </div>
 
-    <p class="pull">
-      No new parameters. No training. The embedder had been losing same-language retrieval to BM25
-      because BM25 reads the whole article and it did not.
-    </p>
-  </div>
-</section>
-
-<section class="band">
-  <div class="shell">
-    <span class="section-no">Negative result, and a correction</span>
-    <h2>Fine-tuning did not help — and the reason I gave was wrong.</h2>
     <p>
-      Contrastive fine-tuning was tried twice and made retrieval worse both times, 0.154 to 0.146.
-      Inverting the pair mix — capping cross-lingual alignment pairs, replacing formulaic templates with
-      Inverse Cloze Task pairs — moved overall nDCG from 0.147 to 0.146. The obvious explanation was
-      tested and rejected.
-    </p>
-    <p>
-      I then attributed the failure to corpus size: 690 trainable articles being too few for contrastive
-      adaptation to beat general-purpose pretraining. That was a guess, and the measurement contradicts it.
-    </p>
-    <p class="pull">
-      Training ran at a 192-token window. 75% of articles are longer, and the median is 386 tokens — so
-      the model learned half a provision, then was asked to retrieve a 512-token representation of it.
-    </p>
-    <p style="margin-top:26px">
-      The positives it trained on and the passages it was scored against were different text. Both ends
-      now match: pairs are built from the same 400-token chunks the index serves, and the training window
-      equals the inference encoder's. That re-run is pending, and whatever it returns will be reported
-      here — including if it fails again. The corpus-size claim was never measured; the truncation was.
-    </p>
-  </div>
-</section>
-
-<section class="band" id="evaluation">
-  <div class="shell">
-    <span class="section-no">Evaluation design</span>
-    <h2>The relevance labels come from the regulator, not from us.</h2>
-    <p>
-      ESMA and Joint Committee Q&amp;A documents state a question, an answer, and the articles the answer
-      relies on. That yields <code>(question, language) → [cited articles]</code> judgements anyone can
-      verify by opening the PDF. No LLM judge, and no self-generated queries scored against themselves.
-    </p>
-    <p>
-      Yield is itself a finding: of <strong>546 Q&amp;A blocks</strong> extracted from five documents,
-      only <strong>141 (25%)</strong> cite an article resolvable to an indexed instrument. The PRIIPs
-      consolidated Q&amp;A yields just 4%, because its answers cite <em>annexes</em> — the KID methodology
-      lives there rather than in numbered articles, and this system indexes articles only. An abort gate
-      refuses to proceed below 120 usable pairs. It fired at 19, survived two parser fixes to 71, and
-      passed only at 141 after three more source documents were added.
+      The embedder gained 42% overall and 50% cross-lingual. No new parameters, no training, no GPU. It
+      just stopped being fed truncated text. Same-language dense retrieval went from losing to BM25
+      (0.236 against 0.322) to beating it once fused (0.338).
     </p>
 
-    <h3 class="sub">Known gaps, stated rather than hidden</h3>
-    <ul class="gaps">
-      <li><code>held_out_instrument</code>: 0 judgements. No PRIIPs RTS citations survived extraction.</li>
-      <li><code>held_out_direction</code>: 0 judgements. Every ESMA question is in English, so <code>nl→en</code> and <code>de→fr</code> never occur. The spec promised holdouts the data cannot populate.</li>
-      <li>64 distinct articles are cited across 141 questions, so effective diversity is 64, not 141.</li>
-      <li>Single seed. Only large gaps are claimed.</li>
+    <p>
+      For a shortlisting tool the more useful number is where the right article lands. Over the 141
+      same-language questions, the cited article is the top result 18% of the time, in the top five 50%
+      of the time, and in the top ten 57%. Before chunking those were 17%, 40% and 45%. Rank one barely
+      moved. What chunking did was pull the right article into the shortlist rather than to the top of
+      it, which is fine, because the point is to hand someone ten provisions instead of a 335 KB
+      directive.
+    </p>
+
+    <h2>The part I did not expect</h2>
+
+    <p>
+      Hybrid scores 0.222 and dense alone scores 0.219. That gap is 0.003, which on 564 queries is
+      about a fifth of a standard error. It is nothing. Both of them clear BM25 by around five and a
+      half standard errors, which is real.
+    </p>
+
+    <p>
+      So the hybrid result I had built the whole repo around is gone. Fusion was worth a genuine 19%
+      when the embedder could only read the first 512 tokens of an article. Once it could read all of
+      them, fusion stopped adding anything. It now costs 0.007 cross-lingually, because mixing a 0.095
+      system into a 0.190 one drags it down.
+    </p>
+
+    <p>
+      Reciprocal rank fusion was compensating for a bug. It worked, in the sense that the number went
+      up, and I would not have found the bug by looking at the fused number, because fusing hid it. The
+      thing that exposed it was slicing the results, seeing BM25 and the embedder win different halves,
+      and eventually asking why.
+    </p>
+
+    <h2>Training had the same problem, only worse</h2>
+
+    <p>
+      Having found one truncation bug I went looking for others, and the training config had
+      <code>max_seq_length = 192</code>.
+    </p>
+
+    <p>
+      75% of articles are longer than that. The median is 386 tokens. So the model was trained on
+      roughly half of a typical provision and then asked at inference to retrieve a 512-token
+      representation of the same thing. The positives it learned and the passages it was scored against
+      were not the same text.
+    </p>
+
+    <p>
+      That is a much better candidate for why fine-tuning failed than the corpus size, and the
+      difference between them is that I measured one and guessed the other. Training now builds pairs
+      from the same 400-token chunks the index serves, and the training window matches the inference
+      encoder. That run is still going. Whatever it comes back with goes in the repo, including if it
+      fails again.
+    </p>
+
+    <h2>What is still wrong with this</h2>
+
+    <ul>
+      <li>Two holdouts in the design have no data. Every ESMA question is in English, so the
+        <code>nl→en</code> and <code>de→fr</code> directions never occur, and no PRIIPs RTS citations
+        survived extraction. I promised holdouts the corpus cannot fill.</li>
+      <li>141 questions cite only 64 distinct articles, so the real diversity is 64.</li>
+      <li>Single seed throughout. I only claim the large gaps.</li>
+      <li>Of 546 Q&amp;A blocks extracted from five documents, only 141 cite an article I can resolve.
+        The PRIIPs Q&amp;A yields 4%, because its answers cite annexes and this indexes articles.</li>
+      <li>Routing by language would score about 0.227 and I have not built it yet.</li>
     </ul>
-  </div>
-</section>
 
-<section class="band">
-  <div class="shell">
-    <span class="section-no">Provenance</span>
-    <h2>Completeness is a defect, not a metric.</h2>
     <p>
-      Every result carries the verbatim passage, instrument, article number, CELEX id, language, version
-      indexed, retrieval date, and a EUR-Lex deep link anchored to the article. Anything below 100%
-      fails the build rather than lowering a score.
+      The lesson I would take from this is narrow and slightly embarrassing: I had a plausible
+      explanation for a bad result, and plausible explanations are what stop you from looking. The
+      corpus-size story was never tested. Checking token lengths against the model window is five lines
+      and I should have run it before I ever wrote the word fine-tuning.
     </p>
-    <p>
-      MiFID II has been amended repeatedly. Consolidated text differs from the original, and citing the
-      wrong version is a compliance error — so the version is recorded and displayed with every hit.
-    </p>
-    <p>
-      The EUR-Lex web UI sits behind a bot challenge that returns 202 with an empty body to automated
-      clients. The corpus is fetched instead through the Publications Office <strong>Cellar</strong>
-      endpoint, the sanctioned machine-to-machine route.
-    </p>
-  </div>
-</section>
 
-<footer>
-  <div class="shell">
-    <div class="links">
-      <a href="https://github.com/Chenjigaram/eu-reg-search">Repository</a>
-      <a href="https://github.com/Chenjigaram/eu-reg-search#results">Full results</a>
-      <a href="https://eur-lex.europa.eu/">EUR-Lex</a>
+    <div class="post-footer">
+      <div class="links">
+        <a href="https://github.com/Chenjigaram/eu-reg-search">Repository</a>
+        <a href="https://github.com/Chenjigaram/eu-reg-search#results">Full results</a>
+        <a href="https://eur-lex.europa.eu/">EUR-Lex</a>
+      </div>
+      <p>
+        Corpus text: EUR-Lex, © European Union, reused under Commission Decision 2011/833/EU;
+        consolidated texts CC BY 4.0. ESMA Q&amp;A documents published for supervisory convergence.
+        Code MIT. Not affiliated with the European Union or ESMA. Not legal advice.
+      </p>
     </div>
-    <p>
-      Corpus text: EUR-Lex, © European Union, reused under Commission Decision 2011/833/EU; consolidated
-      texts CC BY 4.0. ESMA Q&amp;A documents published for supervisory convergence. Code MIT.
-      This page is an independent open-source project and is not affiliated with, or endorsed by, the
-      European Union or ESMA.
-    </p>
-    <p class="disclaim" style="margin-top:18px">Not legal advice. This retrieves provisions; a human interprets them.</p>
+
   </div>
-</footer>
+</article>
 
 </body>
 </html>
