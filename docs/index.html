@@ -296,9 +296,44 @@ GOLD articles (en): 63
 
     <p>
       So the count is: corpus size, guessed, wrong. Truncation, measured, real but not the cause here.
-      Missing supervision, which is the one the comparable paper supports and the one I have not yet
-      tested. Two of my three explanations for this failure were wrong, and the honest version of this
-      section is that I still have not proven the third.
+      Missing supervision, which is the one the comparable paper supports. I tested that one too.
+    </p>
+
+    <p>
+      It means spending the 141 ESMA pairs on training instead of evaluation, so: three-fold
+      cross-validation, train on 94 questions, test on the 47 held out, rotate.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fold</th><th>Zero-shot</th><th>Fine-tuned</th><th>Delta</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="num">0.2688</td><td class="num">0.3324</td><td class="num">+23.7%</td></tr>
+          <tr><td>2</td><td class="num">0.3595</td><td class="num">0.3661</td><td class="num">+1.8%</td></tr>
+          <tr><td>3</td><td class="num">0.2874</td><td class="num">0.2765</td><td class="num">−3.8%</td></tr>
+          <tr><td><strong>mean</strong></td><td class="num">0.3052</td><td class="num">0.3250</td><td class="num">+6.5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      t = 0.88 on two degrees of freedom, which is nothing. One fold gained a quarter, one lost a
+      twenty-fifth, and with 47 test questions per fold this design cannot resolve an effect that size.
+      When fold 1 came back at +23.7% I said supervised fine-tuning works. That is precisely the claim
+      the other two folds do not support, and precisely why the design has folds.
+    </p>
+
+    <p>
+      What does survive is the comparison between the two regimes. Unsupervised fine-tuning was
+      consistently destructive — 15% down overall, 48% down on same-language. Supervised fine-tuning is
+      flat to slightly positive and never catastrophic. Supervision reliably stops the harm. Whether it
+      helps, I cannot tell you from 141 questions.
+    </p>
+
+    <p>
+      Which is the honest end of this thread. Three explanations, one guessed and wrong, one measured
+      and real but aimed at the wrong failure, one supported by the literature and still unresolved
+      because the dataset is too small to answer it.
     </p>
 
     <h2>Rerankers, and the same lesson twice</h2>

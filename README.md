@@ -95,6 +95,32 @@ because all 141 real pairs are reserved for evaluation.
 So: corpus size (guessed, wrong), truncation (measured, real, not the cause here), missing supervision
 (supported by the comparable paper, still untested). Two of three explanations were wrong.
 
+## Supervision stops the harm; whether it helps is unresolved
+
+The remaining theory was that the missing ingredient is labelled question-to-article pairs, since
+[Bilingual BSARD](https://arxiv.org/html/2412.07462v1) fine-tunes on ~900 of them and more than
+doubles BM25. Testing it means spending the 141 ESMA pairs on training rather than evaluation, so
+this is 3-fold cross-validation: train on 94 questions, test on the 47 held out, rotate.
+
+| Fold | zero-shot | fine-tuned | delta |
+| --- | --- | --- | --- |
+| 1 | 0.2688 | 0.3324 | +23.7% |
+| 2 | 0.3595 | 0.3661 | +1.8% |
+| 3 | 0.2874 | 0.2765 | −3.8% |
+| **mean** | **0.3052** | **0.3250** | **+6.5%** |
+
+**t = 0.88 on 2 degrees of freedom. Not significant.** With 47 test questions per fold the design
+cannot resolve an effect this size, so supervision is neither confirmed nor refuted.
+
+What the folds do show is a contrast with the unsupervised runs, which were consistently and heavily
+negative — −15% overall and −48% on same-language retrieval. Supervised training is flat to slightly
+positive and never catastrophic. The training signal, not the corpus size or the sequence length, is
+what made the earlier fine-tunes destructive.
+
+Note that 141 questions cite only 64 distinct articles, so a test question's cited article may have
+appeared as a positive for a different training question. The query is genuinely unseen; the article
+is not always.
+
 ## Reranking helps exactly one slice
 
 564 queries, `bge-reranker-v2-m3` over the hybrid top 20, on a T4.
