@@ -66,30 +66,54 @@ No new parameters, no training. The embedder had been losing same-language retri
 because BM25 reads the whole article and it did not; chunked, it takes that slice back (0.338
 against 0.322).
 
-## Fine-tuning did not help, and the reason was not the one I gave
+## Fine-tuning did not help, and I was wrong about why twice
 
-Contrastive fine-tuning was tried twice and made retrieval worse both times (0.154 to 0.146). The
-first run was 76% cross-lingual alignment pairs, teaching *"these two texts are the same
-provision"* rather than *"this question is answered by this provision"*. Inverting the mix — capping
-alignment pairs, replacing formulaic templates with Inverse Cloze Task pairs — moved overall nDCG
-from 0.147 to 0.146. The obvious explanation was tested and rejected.
+Contrastive fine-tuning was tried three times and made retrieval worse every time.
 
-I then attributed the failure to corpus size: 690 trainable articles being too few for contrastive
-adaptation to beat general-purpose pretraining. That was a guess, and the measurement contradicts
-it.
+The first two runs pointed at pair construction, then at corpus size. The corpus-size claim was a
+guess. Measuring found something real instead: training ran at `max_seq_length = 192`, while 75% of
+articles are longer and the median is 386 tokens, so the model learned half a provision and was then
+asked to retrieve a 512-token representation of it.
 
-**Training ran at `max_seq_length = 192`.** 75% of articles are longer than that, and the median
-article is 386 tokens — so the model was trained on roughly half of a typical provision and then
-asked at inference to retrieve a 512-token representation of it. The positives it learned and the
-passages it was scored against were different text.
+Fixing that did not rescue fine-tuning.
 
-Both ends now match: pairs are built from the same 400-token chunks the index serves, and the
-training window equals the inference encoder's. The re-run is pending; whatever it returns will be
-reported here, including if it fails again.
+| Dense retriever | Overall | same-language | cross-lingual |
+| --- | --- | --- | --- |
+| zero-shot, chunked | **0.219** | **0.305** | 0.190 |
+| fine-tuned on chunks, matched window | 0.185 | 0.160 | **0.193** |
+| | −15% | −48% | +2% |
 
-The honest state is that the corpus-size claim was never measured, and the truncation was. Domain
-fine-tuning may still turn out not to pay for itself at this scale — but that has not been shown
-yet, and the earlier negative result cannot carry the weight I put on it.
+Same-language collapses by half; cross-lingual gains 2%. 43% of the training pairs are cross-lingual
+alignment pairs, so the model learns that two texts are the same provision — and forgets how to match
+a question to a passage.
+
+[Bilingual BSARD](https://arxiv.org/html/2412.07462v1) is the closest published benchmark: statutory
+article retrieval in Dutch and French. Their fine-tuned models more than double BM25, 0.20 to 0.45
+nDCG@10, trained on ~900 **labelled question-article pairs**. This trains on unsupervised proxies,
+because all 141 real pairs are reserved for evaluation.
+
+So: corpus size (guessed, wrong), truncation (measured, real, not the cause here), missing supervision
+(supported by the comparable paper, still untested). Two of three explanations were wrong.
+
+## Reranking helps exactly one slice
+
+564 queries, `bge-reranker-v2-m3` over the hybrid top 20, on a T4.
+
+| System | Overall | same-language | cross-lingual |
+| --- | --- | --- | --- |
+| hybrid baseline | 0.227 | **0.339** | 0.190 |
+| + rerank everything | 0.231 | 0.299 | **0.208** |
+| **+ rerank cross-lingual only** | **0.241** | **0.339** | **0.208** |
+
+Cross-lingual +9%, same-language −12%, and applied globally they cancel. Applied only where query and
+article languages differ it is worth ~6%.
+
+A smaller cross-encoder (`mmarco-mMiniLMv2`) lost 15% at depth 10 and 30% at depth 20 — it promoted
+wrong articles from deeper ranks, being trained on short web queries rather than 250-word regulatory
+ones. "Reranking does not work here" would have been the wrong conclusion from the cheap model alone.
+
+Oracle ceiling for a perfect reranker of the top 20 is 0.581 same-language. Most of that gap is still
+open.
 
 ## What makes the evaluation trustworthy
 

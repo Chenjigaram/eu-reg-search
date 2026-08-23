@@ -262,11 +262,90 @@ GOLD articles (en): 63
     </p>
 
     <p>
-      That is a much better candidate for why fine-tuning failed than the corpus size, and the
-      difference between them is that I measured one and guessed the other. Training now builds pairs
-      from the same 400-token chunks the index serves, and the training window matches the inference
-      encoder. That run is still going. Whatever it comes back with goes in the repo, including if it
-      fails again.
+      So I fixed it. Training now builds pairs from the same 400-token chunks the index serves, and the
+      training window matches the inference encoder. I expected that to rescue fine-tuning.
+    </p>
+
+    <p>It did not.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Dense retriever</th><th>Overall</th><th>Same language</th><th>Cross-lingual</th></tr></thead>
+        <tbody>
+          <tr><td>Zero-shot, chunked</td><td class="num">0.219</td><td class="num">0.305</td><td class="num">0.190</td></tr>
+          <tr><td>Fine-tuned on chunks</td><td class="num">0.185</td><td class="num">0.160</td><td class="num">0.193</td></tr>
+          <tr><td></td><td class="num">−15%</td><td class="num">−48%</td><td class="num">+2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Same-language retrieval collapses by nearly half, cross-lingual creeps up by 2%. That is the third
+      time today the same shape has appeared, and this time it names the cause: 43% of my training pairs
+      are cross-lingual alignment pairs. The model is being taught that two texts are the same provision,
+      it gets better at exactly that, and it forgets how to match a question to a passage.
+    </p>
+
+    <p>
+      Which is what the literature would have told me. <a href="https://arxiv.org/html/2412.07462v1">Bilingual
+      BSARD</a> is the closest published benchmark to this — statutory article retrieval in Dutch and
+      French — and their fine-tuned models more than double BM25, from 0.20 to 0.45 nDCG@10. They train
+      on roughly 900 <em>labelled question–article pairs</em>. I train on unsupervised proxies, because
+      all 141 of my real pairs are reserved for evaluation.
+    </p>
+
+    <p>
+      So the count is: corpus size, guessed, wrong. Truncation, measured, real but not the cause here.
+      Missing supervision, which is the one the comparable paper supports and the one I have not yet
+      tested. Two of my three explanations for this failure were wrong, and the honest version of this
+      section is that I still have not proven the third.
+    </p>
+
+    <h2>Rerankers, and the same lesson twice</h2>
+
+    <p>
+      The obvious next move was a cross-encoder reranker. The case for it is arithmetic: the right
+      article is in the top ten 57% of the time but at rank one only 18%, so if a reranker could sort
+      the shortlist perfectly, same-language nDCG would go from 0.338 to 0.581. The information is
+      already retrieved. Only the ordering is wrong.
+    </p>
+
+    <p>
+      A small multilingual cross-encoder (<code>mmarco-mMiniLMv2</code>) made it worse: 0.338 down to
+      0.286 reranking the top ten, and 0.236 reranking the top twenty. Getting worse as the candidate
+      pool grows is the tell — it was promoting wrong articles from ranks 11 to 20 into the top ten. It
+      is trained on short web queries and these are 250-word regulatory questions.
+    </p>
+
+    <p>
+      <code>bge-reranker-v2-m3</code> is the model that should handle long multilingual text, and it is
+      3.2 seconds per pair on my laptop, which is a 25-hour evaluation. On a Kaggle T4 it took twenty
+      minutes.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>564 queries</th><th>Overall</th><th>Same language</th><th>Cross-lingual</th></tr></thead>
+        <tbody>
+          <tr><td>Hybrid baseline</td><td class="num">0.227</td><td class="num">0.339</td><td class="num">0.190</td></tr>
+          <tr><td>+ rerank top 20</td><td class="num">0.231</td><td class="num">0.299</td><td class="num">0.208</td></tr>
+          <tr class="win"><td>+ rerank cross-lingual only</td><td class="num">0.241</td><td class="num">0.339</td><td class="num">0.208</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Cross-lingual up 9%, same-language down 12%, and applied to everything the two cancel out to
+      nothing. Apply it only where the query language and the article language differ and it is worth
+      about 6%.
+    </p>
+
+    <p>
+      That is the second time in this project the answer has been to route rather than blend. Fusion of
+      BM25 and dense retrieval was the first, and it stopped paying once the truncation was fixed. Both
+      effects were invisible in the overall column and only showed up in the slices. If there is one
+      thing I would take from building this, it is that an averaged metric hid a real effect twice in
+      the same system, in the same week, and I nearly shipped the wrong conclusion both times.
     </p>
 
     <h2>What is still wrong with this</h2>
@@ -279,7 +358,11 @@ GOLD articles (en): 63
       <li>Single seed throughout. I only claim the large gaps.</li>
       <li>Of 546 Q&amp;A blocks extracted from five documents, only 141 cite an article I can resolve.
         The PRIIPs Q&amp;A yields 4%, because its answers cite annexes and this indexes articles.</li>
-      <li>Routing by language would score about 0.227 and I have not built it yet.</li>
+      <li>Routing by language would score about 0.241 with the reranker, and I have not built it into
+        the system yet — it is measured, not shipped.</li>
+      <li>The supervision theory for the fine-tuning failure is untested. Cross-validating on the 141
+        ESMA pairs would test it, at the cost of no longer having a clean held-out set.</li>
+      <li>A reranker adds roughly 200 ms per query. The current system answers in 69 ms.</li>
     </ul>
 
     <p>
