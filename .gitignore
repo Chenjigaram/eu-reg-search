@@ -18,3 +18,6 @@ reports/figures/*.png
 
 # Kaggle staging copies of the corpus; regenerate with cli.fetch then cp into kaggle/dataset/
 kaggle/dataset/*.jsonl
+
+# Planning scratch; never publish
+docs/superpowers/
