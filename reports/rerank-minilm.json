@@ -1,0 +1,8 @@
+{
+  "queries": 141,
+  "baseline_ndcg10": 0.3379,
+  "rerank_top10_ndcg10": 0.2864,
+  "rerank_top20_ndcg10": 0.2356,
+  "oracle_ceiling_depth10": 0.487,
+  "oracle_ceiling_depth20": 0.5833
+}
