@@ -1,0 +1,24 @@
+{
+  "baseline": {
+    "overall": 0.2272,
+    "same_language": 0.3389,
+    "cross_lingual": 0.19
+  },
+  "rerank_depth20": {
+    "overall": 0.2306,
+    "same_language": 0.2987,
+    "cross_lingual": 0.2079
+  },
+  "rerank_depth10": {
+    "overall": 0.2299,
+    "same_language": 0.3103,
+    "cross_lingual": 0.2031
+  },
+  "ceiling": {
+    "overall": 0.4716,
+    "same_language": 0.581,
+    "cross_lingual": 0.4352
+  },
+  "routed_overall": 0.2406,
+  "notes": "bge-reranker-v2-m3 over hybrid top-20 on a Tesla T4. Reranking helps the slice where retrieval is weakest and hurts the slice where it is strongest, so applying it everywhere gains nothing; applying it only cross-lingually gains ~6%."
+}
