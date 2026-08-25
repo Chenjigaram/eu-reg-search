@@ -1,0 +1,25 @@
+{
+  "system": "late-whole",
+  "queries": 564,
+  "ndcg": 0.1861,
+  "recall": 0.281,
+  "mrr": 0.1694,
+  "provenance_complete": true,
+  "slices": {
+    "same_language": {
+      "queries": 141,
+      "ndcg": 0.2645,
+      "recall": 0.3641,
+      "mrr": 0.2529
+    },
+    "cross_lingual": {
+      "queries": 423,
+      "ndcg": 0.16,
+      "recall": 0.2533,
+      "mrr": 0.1416
+    }
+  },
+  "aggregation": "late",
+  "chunked": false,
+  "seconds": 400.1
+}

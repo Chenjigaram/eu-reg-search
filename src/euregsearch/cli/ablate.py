@@ -47,6 +47,8 @@ def main() -> None:
     elapsed = time.perf_counter() - started
 
     summary = result.summary()
+    summary["per_query"] = {name: [list(row) for row in rows]
+                            for name, rows in result.per_slice.items()}
     summary["aggregation"] = aggregation
     summary["chunked"] = chunked
     summary["seconds"] = round(elapsed, 1)
