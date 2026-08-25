@@ -5,7 +5,11 @@ rows line up and can be paired. Reports a paired t-statistic and a bootstrap int
 on the mean difference, because a large relative gap on a small benchmark is exactly
 the situation where an unpaired eyeball is wrong.
 """
-import json, math, pathlib, random, statistics, sys
+import json
+import math
+import random
+import statistics
+import sys
 
 a_name, b_name = sys.argv[1], sys.argv[2]
 a = json.load(open(f"reports/ablation-{a_name}.json"))
@@ -25,7 +29,7 @@ for slice_name in sorted(a["per_query"]):
     if len(rows_a) != len(rows_b):
         print(f"{slice_name}: length mismatch {len(rows_a)} vs {len(rows_b)}, skipped")
         continue
-    diffs = [y - x for x, y in zip(rows_a, rows_b)]
+    diffs = [y - x for x, y in zip(rows_a, rows_b, strict=True)]
     n = len(diffs)
     mean = statistics.mean(diffs)
     sd = statistics.stdev(diffs) if n > 1 else 0.0
@@ -37,7 +41,7 @@ for slice_name in sorted(a["per_query"]):
 
 all_a = [r[0] for s in sorted(a["per_query"]) for r in a["per_query"][s]]
 all_b = [r[0] for s in sorted(b["per_query"]) for r in b["per_query"][s]]
-diffs = [y - x for x, y in zip(all_a, all_b)]
+diffs = [y - x for x, y in zip(all_a, all_b, strict=True)]
 n = len(diffs)
 mean = statistics.mean(diffs)
 sd = statistics.stdev(diffs)
